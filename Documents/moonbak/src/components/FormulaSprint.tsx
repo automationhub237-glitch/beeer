@@ -11,9 +11,10 @@ import {
   Award,
   Sparkles,
   RotateCcw,
-  HelpCircle
+  HelpCircle,
+  Filter
 } from 'lucide-react';
-import type { QuestionDifficulty } from '../types/neetOS';
+import type { QuestionCategory } from '../types/neetOS';
 
 export const FormulaSprint: React.FC = () => {
   const {
@@ -36,6 +37,7 @@ export const FormulaSprint: React.FC = () => {
   const [timerRunning, setTimerRunning] = useState<boolean>(false);
 
   // Attack mode state
+  const [selectedCategory, setSelectedCategory] = useState<QuestionCategory | 'ALL'>('ALL');
   const [attackQuestions, setAttackQuestions] = useState(questionBank);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [userSelectedOption, setUserSelectedOption] = useState<number | null>(null);
@@ -46,6 +48,18 @@ export const FormulaSprint: React.FC = () => {
   // Filtered Sprint Blocks for active subject
   const activeSubjectBlocks = sprintBlocks.filter(b => b.blockType === selectedBlockSubject);
   const currentBlock = activeSubjectBlocks[currentBlockIndex] || activeSubjectBlocks[0] || sprintBlocks[0];
+
+  // Filter Attack Questions based on category selection
+  useEffect(() => {
+    if (selectedCategory === 'ALL') {
+      setAttackQuestions(questionBank);
+    } else {
+      setAttackQuestions(questionBank.filter(q => q.category === selectedCategory));
+    }
+    setCurrentQuestionIndex(0);
+    setUserSelectedOption(null);
+    setIsOptionSubmitted(false);
+  }, [selectedCategory, questionBank]);
 
   // Timer Effect
   useEffect(() => {
@@ -95,7 +109,7 @@ export const FormulaSprint: React.FC = () => {
     setIsOptionSubmitted(true);
     const isCorrect = userSelectedOption === currentQuestion.correctOptionIndex;
 
-    recordQuestionAttempt(currentQuestion.topic, isCorrect, currentQuestion.difficulty);
+    recordQuestionAttempt(currentQuestion.topic || 'General Topic', isCorrect, currentQuestion.difficulty || '0-20');
 
     if (isCorrect) {
       setAttackScore(prev => prev + 1);
@@ -117,17 +131,20 @@ export const FormulaSprint: React.FC = () => {
     }
   };
 
-  const getDifficultyBadge = (diff: QuestionDifficulty) => {
-    switch (diff) {
-      case '0-20':
+  const getCategoryBadge = (cat?: QuestionCategory, pyqYear?: number, year?: number) => {
+    switch (cat) {
+      case 'EASY':
         return <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-mono">LEVEL 0–20 (EASY)</span>;
-      case '20-50':
+      case 'MEDIUM':
         return <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-[10px] font-mono">LEVEL 20–50 (MEDIUM)</span>;
-      case '50+':
       case 'CYQ':
         return <span className="px-2 py-0.5 bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded text-[10px] font-mono">LEVEL 50+ / CYQ (HARD)</span>;
+      case 'PREDICTED_PYQ':
+        return <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded text-[10px] font-mono">PREDICTED PYQ</span>;
+      case 'ACTUAL_PYQ':
+        return <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded text-[10px] font-mono">ACTUAL PYQ ({pyqYear || year})</span>;
       default:
-        return null;
+        return <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-mono">PRACTICE ITEM</span>;
     }
   };
 
@@ -138,11 +155,11 @@ export const FormulaSprint: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
             <Zap className="w-3.5 h-3.5" />
-            11. RESTRUCTURED 10-MIN SPRINT & GRADUATED ATTACK
+            11. 5-LEVEL GRADUATED ATTACK & 10-MIN SPRINT
           </div>
-          <h2 className="text-2xl font-bold text-white">Physics First → Chemistry → Biology Revision Blocks</h2>
+          <h2 className="text-2xl font-bold text-white">Physics First → Chemistry → Biology Active Recall</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Active recall sprint blocks followed by a 0 → 20 → 50 → CYQ → PYQ graduated difficulty attack ladder.
+            Active recall sprint blocks + 5-tier graduated attack ladder (Easy → Medium → CYQ → Predicted PYQs → Actual PYQs) with 3-part algorithms.
           </p>
         </div>
 
@@ -191,7 +208,7 @@ export const FormulaSprint: React.FC = () => {
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            2. 10-MIN ATTACK (GRADUATED 0→50→PYQ)
+            2. 10-MIN ATTACK (5-TIER GRADUATED)
           </button>
           <button
             onClick={() => {
@@ -413,7 +430,25 @@ export const FormulaSprint: React.FC = () => {
       {/* MODE 2: GRADUATED DIFFICULTY ATTACK SPRINT */}
       {mode === 'attack' && (
         <div className="space-y-5">
-          {!attackCompleted ? (
+          {/* Category Filter Pills for Attack Mode */}
+          <div className="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs font-mono overflow-x-auto">
+            <span className="text-slate-500 flex items-center gap-1 mr-1 shrink-0"><Filter className="w-3.5 h-3.5" /> Filter Tier:</span>
+            {(['ALL', 'EASY', 'MEDIUM', 'CYQ', 'PREDICTED_PYQ', 'ACTUAL_PYQ'] as const).map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-2.5 py-1 rounded transition-all shrink-0 ${
+                  selectedCategory === cat
+                    ? 'bg-amber-600 text-slate-950 font-bold'
+                    : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {!attackCompleted && currentQuestion ? (
             <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                 <div>
@@ -421,16 +456,7 @@ export const FormulaSprint: React.FC = () => {
                     <span className="text-xs text-amber-400 font-mono uppercase">
                       RAPID ATTACK • QUESTION {currentQuestionIndex + 1} OF {attackQuestions.length}
                     </span>
-                    {getDifficultyBadge(currentQuestion.difficulty)}
-                    {currentQuestion.isOfficialPYQ ? (
-                      <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded text-[10px] font-mono">
-                        OFFICIAL PYQ ({currentQuestion.year})
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 bg-slate-900 text-slate-400 border border-slate-800 rounded text-[10px] font-mono">
-                        GENERATED PRACTICE
-                      </span>
-                    )}
+                    {getCategoryBadge(currentQuestion.category, currentQuestion.pyqYear, currentQuestion.year)}
                   </div>
                   <h3 className="text-lg font-bold text-white">{currentQuestion.topic} ({currentQuestion.subject})</h3>
                 </div>
@@ -518,13 +544,32 @@ export const FormulaSprint: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Explanation Box */}
-                  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block">Explanation</span>
-                    <p className="text-xs text-slate-300">{currentQuestion.explanation}</p>
+                  {/* 3-Part Solution Algorithm Box */}
+                  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block">3-Part Solution Algorithm ("How To Solve It")</span>
+
+                    {currentQuestion.solverAlgorithm ? (
+                      <div className="space-y-2 text-xs">
+                        <div className="p-2.5 bg-slate-950 rounded border border-slate-800 text-slate-200">
+                          <strong className="text-cyan-400 block mb-0.5">1. Standard Textbook Method:</strong>
+                          <span>{currentQuestion.solverAlgorithm.standardMethod}</span>
+                        </div>
+                        <div className="p-2.5 bg-emerald-950/40 rounded border border-emerald-500/30 text-emerald-200">
+                          <strong className="text-emerald-400 block mb-0.5">2. Topper Fast-Track Shortcut (15s):</strong>
+                          <span>{currentQuestion.solverAlgorithm.topperShortcut}</span>
+                        </div>
+                        <div className="p-2.5 bg-rose-950/40 rounded border border-rose-500/30 text-rose-200">
+                          <strong className="text-rose-400 block mb-0.5">3. Common Trap Warning:</strong>
+                          <span>{currentQuestion.solverAlgorithm.commonTrapWarning}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-slate-300">{currentQuestion.explanation}</p>
+                    )}
+
                     <div className="pt-2 border-t border-slate-800 flex flex-wrap gap-4 text-[11px] text-slate-400">
-                      <span>Concept: {currentQuestion.conceptTested}</span>
-                      <span>Trap: {currentQuestion.commonMistakeTrap}</span>
+                      {currentQuestion.ncertPageRef && <span>Ref: {currentQuestion.ncertPageRef}</span>}
+                      {currentQuestion.conceptTested && <span>Concept: {currentQuestion.conceptTested}</span>}
                     </div>
                   </div>
                 </div>
@@ -592,7 +637,17 @@ export const FormulaSprint: React.FC = () => {
 
                   <div className="p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs space-y-1">
                     <span className="text-emerald-400 font-bold block">Correct Option: {entry.options[entry.correctOptionIndex]}</span>
-                    <p className="text-slate-300">{entry.explanation}</p>
+
+                    {entry.solverAlgorithm ? (
+                      <div className="space-y-1.5 pt-1 text-[11px]">
+                        <p className="text-slate-300"><strong>Standard:</strong> {entry.solverAlgorithm.standardMethod}</p>
+                        <p className="text-emerald-300"><strong>Topper Shortcut:</strong> {entry.solverAlgorithm.topperShortcut}</p>
+                        <p className="text-rose-300"><strong>Trap:</strong> {entry.solverAlgorithm.commonTrapWarning}</p>
+                      </div>
+                    ) : (
+                      <p className="text-slate-300">{entry.explanation}</p>
+                    )}
+
                     <span className="text-amber-400 block pt-1">Trap to avoid: {entry.commonMistakeTrap}</span>
                   </div>
                 </div>

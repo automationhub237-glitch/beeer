@@ -3,14 +3,15 @@ import { useOS } from '../context/OSContext';
 import {
   BookOpen,
   FileText,
-  Zap,
   CheckCircle2,
   HelpCircle,
   Award,
   Edit3,
   Bookmark,
   TrendingUp,
-  FolderTree
+  FolderTree,
+  Sparkles,
+  Brain
 } from 'lucide-react';
 import type { TopicResourceCategory } from '../types/neetOS';
 
@@ -28,9 +29,8 @@ export const TopicResourceHub: React.FC = () => {
   const [selectedSubjectIndex, setSelectedSubjectIndex] = useState<number>(0);
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number>(0);
   const [selectedTopicIndex, setSelectedTopicIndex] = useState<number>(0);
-  const [activeCategory, setActiveCategory] = useState<TopicResourceCategory>('detailed_notes');
+  const [activeCategory, setActiveCategory] = useState<TopicResourceCategory>('tier1_detailed_notes');
 
-  // Local Note Input State
   const activeSubjectTree = syllabus[selectedSubjectIndex] || syllabus[0];
   const activeChapter = activeSubjectTree?.chapters[selectedChapterIndex] || activeSubjectTree?.chapters[0];
   const activeTopic = activeChapter?.topics[selectedTopicIndex] || activeChapter?.topics[0];
@@ -44,20 +44,20 @@ export const TopicResourceHub: React.FC = () => {
   }, [topicId, userNotes]);
 
   const categories: { id: TopicResourceCategory; label: string; icon: React.ElementType }[] = [
-    { id: 'detailed_notes', label: 'Detailed Notes', icon: FileText },
-    { id: 'short_notes', label: 'Short Notes', icon: BookOpen },
-    { id: 'sprint_10min', label: '10-Min Sprint', icon: Zap },
-    { id: 'attack_10min', label: '10-Min Attack', icon: Zap },
+    { id: 'tier1_detailed_notes', label: 'Tier 1: NCERT Line-by-Line', icon: FileText },
+    { id: 'tier2_short_notes', label: 'Tier 2: Revision Short Notes', icon: BookOpen },
+    { id: 'tier3_why_how', label: 'Tier 3: Conceptual Why & How', icon: Brain },
+    { id: 'tier4_topper_tricks', label: 'Tier 4: Topper Tricks & Shortcuts', icon: Sparkles },
+    { id: 'local_notes', label: 'Local User Notes Workspace', icon: Edit3 },
     { id: 'formula_bank', label: 'Formula Bank', icon: Bookmark },
-    { id: 'ncert_facts', label: 'NCERT Facts', icon: CheckCircle2 },
-    { id: 'pyqs', label: 'PYQs (Authentic)', icon: Award },
+    { id: 'ncert_facts', label: 'NCERT Direct Facts', icon: CheckCircle2 },
+    { id: 'pyqs', label: 'Authentic PYQs', icon: Award },
     { id: 'cyqs', label: 'CYQs (Challenge)', icon: HelpCircle },
-    { id: 'easy_questions', label: 'Easy Questions (0–20)', icon: HelpCircle },
-    { id: 'medium_questions', label: 'Medium Questions (20–50)', icon: HelpCircle },
-    { id: 'hard_questions', label: 'Hard Questions (50+)', icon: HelpCircle },
-    { id: 'common_mistakes', label: 'Common Mistakes', icon: Edit3 },
+    { id: 'easy_questions', label: 'Level 0–20 (Easy)', icon: HelpCircle },
+    { id: 'medium_questions', label: 'Level 20–50 (Medium)', icon: HelpCircle },
+    { id: 'hard_questions', label: 'Level 50+ (Hard)', icon: HelpCircle },
+    { id: 'common_mistakes', label: 'Common Mistakes & Traps', icon: Edit3 },
     { id: 'flashcards', label: 'Flashcards', icon: BookOpen },
-    { id: 'local_notes', label: 'Local User Notes', icon: Edit3 },
     { id: 'progress', label: 'Topic Progress', icon: TrendingUp }
   ];
 
@@ -76,11 +76,11 @@ export const TopicResourceHub: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
             <FolderTree className="w-3.5 h-3.5" />
-            2. TOPIC RESOURCE HUB (OFFICIAL SYLLABUS CATALOGUE)
+            2. TOPIC RESOURCE HUB & MULTI-TIER NOTES
           </div>
-          <h2 className="text-2xl font-bold text-white">Subject → Chapter → Topic Resource Repository</h2>
+          <h2 className="text-2xl font-bold text-white">4-Tier Topic Notes & Master Syllabus Hub</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Access 15 comprehensive learning resources for every topic across Physics, Chemistry, and Biology.
+            Access Tier 1 NCERT Line-by-Line, Tier 2 Revision, Tier 3 Why/How models, and Tier 4 Topper Tricks for all 79 NEET chapters.
           </p>
         </div>
       </div>
@@ -145,9 +145,7 @@ export const TopicResourceHub: React.FC = () => {
           return (
             <button
               key={cat.id}
-              onClick={() => {
-                setActiveCategory(cat.id);
-              }}
+              onClick={() => setActiveCategory(cat.id)}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 isActive
                   ? 'bg-cyan-600 text-slate-950 font-bold shadow-lg shadow-cyan-950/40'
@@ -163,27 +161,101 @@ export const TopicResourceHub: React.FC = () => {
 
       {/* Resource Content Display Canvas */}
       <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 min-h-[300px]">
-        {/* Detailed Notes */}
-        {activeCategory === 'detailed_notes' && (
+        {/* Tier 1: Detailed NCERT Line-by-Line Notes */}
+        {(activeCategory === 'tier1_detailed_notes' || activeCategory === 'detailed_notes') && (
           <div className="space-y-3">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Detailed Notes — {activeTopic?.title}</h3>
-            {resourceData?.detailedNotes ? (
-              <p className="text-sm text-slate-200 whitespace-pre-line leading-relaxed">{resourceData.detailedNotes}</p>
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-cyan-400" />
+              Tier 1: Detailed NCERT Line-by-Line Notes — {activeTopic?.title}
+            </h3>
+            {resourceData?.detailedNCERTNotes || resourceData?.detailedNotes ? (
+              <p className="text-sm text-slate-200 whitespace-pre-line leading-relaxed">
+                {resourceData.detailedNCERTNotes || resourceData.detailedNotes}
+              </p>
             ) : (
               <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
             )}
           </div>
         )}
 
-        {/* Short Notes */}
-        {activeCategory === 'short_notes' && (
+        {/* Tier 2: Revision Short Notes */}
+        {(activeCategory === 'tier2_short_notes' || activeCategory === 'short_notes') && (
           <div className="space-y-3">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Short Notes & High-Yield Summary</h3>
-            {resourceData?.shortNotes ? (
-              <p className="text-xs font-mono text-cyan-300 bg-slate-900 p-4 rounded-xl border border-slate-800 whitespace-pre-line">{resourceData.shortNotes}</p>
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-emerald-400" />
+              Tier 2: Revision Short Notes & High-Yield Bullet Points
+            </h3>
+            {resourceData?.revisionShortNotes || resourceData?.shortNotes ? (
+              <p className="text-xs font-mono text-cyan-300 bg-slate-900 p-4 rounded-xl border border-slate-800 whitespace-pre-line">
+                {resourceData.revisionShortNotes || resourceData.shortNotes}
+              </p>
             ) : (
               <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
             )}
+          </div>
+        )}
+
+        {/* Tier 3: Conceptual Why & How Breakdowns */}
+        {activeCategory === 'tier3_why_how' && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
+              <Brain className="w-5 h-5 text-amber-400" />
+              Tier 3: Conceptual "Why & How" Breakdowns (OpenStax Models & Mechanisms)
+            </h3>
+            {resourceData?.conceptualWhyHowBreakdowns ? (
+              <p className="text-xs text-amber-200 bg-slate-900 p-4 rounded-xl border border-slate-800 leading-relaxed whitespace-pre-line">
+                {resourceData.conceptualWhyHowBreakdowns}
+              </p>
+            ) : (
+              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+            )}
+          </div>
+        )}
+
+        {/* Tier 4: Topper Trick & Shortcut Bank */}
+        {activeCategory === 'tier4_topper_tricks' && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              Tier 4: Topper Trick & Shortcut Bank (Fast Calculations & Mnemonics)
+            </h3>
+            {resourceData?.topperTricksShortcutBank && resourceData.topperTricksShortcutBank.length > 0 ? (
+              <ul className="space-y-2">
+                {resourceData.topperTricksShortcutBank.map((trick, i) => (
+                  <li key={i} className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-mono text-purple-300 flex items-start gap-2">
+                    <span className="text-purple-400 font-bold">Trick #{i + 1}:</span>
+                    <span>{trick}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+            )}
+          </div>
+        )}
+
+        {/* Local User Workspace */}
+        {activeCategory === 'local_notes' && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-cyan-400" />
+                Persistent Local Workspace — Notes for {activeTopic?.title}
+              </h3>
+              <button
+                onClick={handleSaveNote}
+                className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-lg shadow-md"
+              >
+                Save Local Note
+              </button>
+            </div>
+            <textarea
+              value={noteInput}
+              onChange={(e) => setNoteInput(e.target.value)}
+              placeholder="Type your personal formulas, memory hooks, or local study notes here..."
+              rows={8}
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+            />
           </div>
         )}
 
@@ -228,11 +300,11 @@ export const TopicResourceHub: React.FC = () => {
         {activeCategory === 'pyqs' && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Authentic Past NEET Questions (PYQs)</h3>
-            {topicQuestions.filter(q => q.isOfficialPYQ).length > 0 ? (
+            {topicQuestions.filter(q => q.category === 'ACTUAL_PYQ' || q.isOfficialPYQ).length > 0 ? (
               <div className="space-y-3">
-                {topicQuestions.filter(q => q.isOfficialPYQ).map(q => (
+                {topicQuestions.filter(q => q.category === 'ACTUAL_PYQ' || q.isOfficialPYQ).map(q => (
                   <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                    <span className="text-xs font-mono text-cyan-400 font-bold block">NEET OFFICIAL PYQ ({q.year})</span>
+                    <span className="text-xs font-mono text-cyan-400 font-bold block">NEET OFFICIAL PYQ ({q.pyqYear || q.year})</span>
                     <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
                     <p className="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800">{q.explanation}</p>
                   </div>
@@ -248,9 +320,9 @@ export const TopicResourceHub: React.FC = () => {
         {activeCategory === 'cyqs' && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Conceptual / Challenge Yield Questions (CYQs)</h3>
-            {topicQuestions.filter(q => q.difficulty === 'CYQ' && !q.isOfficialPYQ).length > 0 ? (
+            {topicQuestions.filter(q => q.category === 'CYQ' || q.difficulty === 'CYQ').length > 0 ? (
               <div className="space-y-3">
-                {topicQuestions.filter(q => q.difficulty === 'CYQ' && !q.isOfficialPYQ).map(q => (
+                {topicQuestions.filter(q => q.category === 'CYQ' || q.difficulty === 'CYQ').map(q => (
                   <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
                     <span className="text-xs font-mono text-rose-400 font-bold block">CYQ CHALLENGE ITEM</span>
                     <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
@@ -303,28 +375,6 @@ export const TopicResourceHub: React.FC = () => {
           </div>
         )}
 
-        {/* Local User Notes */}
-        {activeCategory === 'local_notes' && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <h3 className="text-lg font-bold text-white">Local User Notes for {activeTopic?.title}</h3>
-              <button
-                onClick={handleSaveNote}
-                className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-lg shadow-md"
-              >
-                Save Local Note
-              </button>
-            </div>
-            <textarea
-              value={noteInput}
-              onChange={(e) => setNoteInput(e.target.value)}
-              placeholder="Type your personal formulas, memory hooks, or local study notes here..."
-              rows={8}
-              className="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
-            />
-          </div>
-        )}
-
         {/* Progress */}
         {activeCategory === 'progress' && (
           <div className="space-y-4">
@@ -346,7 +396,7 @@ export const TopicResourceHub: React.FC = () => {
           </div>
         )}
 
-        {/* Fallback for empty categories e.g. 10min sprint/attack redirect or empty question levels */}
+        {/* Fallback for empty categories */}
         {['sprint_10min', 'attack_10min', 'easy_questions', 'medium_questions', 'hard_questions'].includes(activeCategory) && (
           <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
         )}

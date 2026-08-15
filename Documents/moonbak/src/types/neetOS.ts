@@ -2,6 +2,8 @@ export type Subject = 'Physics' | 'Chemistry' | 'Biology' | 'Cross-Disciplinary'
 
 export type QuestionDifficulty = '0-20' | '20-50' | '50+' | 'CYQ';
 
+export type QuestionCategory = 'EASY' | 'MEDIUM' | 'CYQ' | 'PREDICTED_PYQ' | 'ACTUAL_PYQ';
+
 export type QuestionType = 'MCQ' | 'Assertion-Reason' | 'Statement-based' | 'Match the following';
 
 export type QuestionSource = 'NCERT' | 'OpenStax' | 'Official PYQ' | 'Generated Practice';
@@ -54,9 +56,9 @@ export interface ConceptNode {
   subject: Subject;
   chapter: string;
   summary: string;
-  prerequisites: string[]; // IDs of prerequisites
-  targetChain: string[]; // Titles in backwards order e.g. Moles -> Mole Fraction -> Vapour Pressure -> Raoult's Law -> Colligative Properties
-  physicalModel: string; // Non-symbolic visualisation description
+  prerequisites: string[];
+  targetChain: string[];
+  physicalModel: string;
   formalEquations: string[];
   whyPrompts: {
     question: string;
@@ -64,8 +66,8 @@ export interface ConceptNode {
   }[];
   connectedConceptIds: string[];
   crossSubjectConnections: CrossSubjectConnection[];
-  keyKeywords: string[]; // For blurting structural matching
-  isVerified: boolean; // Integrity label
+  keyKeywords: string[];
+  isVerified: boolean;
   resourceType: 'OFFICIAL / VERIFIED' | 'USER IMPORTED' | 'EXTERNAL RESOURCE' | 'AI GENERATED';
 }
 
@@ -90,23 +92,36 @@ export interface PYQItem {
   integrityLabel: 'OFFICIAL / VERIFIED' | 'USER IMPORTED' | 'EXTERNAL RESOURCE' | 'AI GENERATED';
 }
 
+export interface SolverAlgorithm {
+  standardMethod: string;
+  topperShortcut: string;
+  commonTrapWarning: string;
+}
+
 export interface GraduatedQuestionItem {
   id: string;
-  questionText: string;
-  options: string[];
-  correctOptionIndex: number;
-  explanation: string;
   subject: Subject;
   chapter: string;
   topic: string;
   topicId?: string;
-  difficulty: QuestionDifficulty;
-  questionType: QuestionType;
-  source: QuestionSource;
-  year?: number; // Present ONLY if authentic past NEET PYQ
-  isOfficialPYQ: boolean;
-  conceptTested: string;
-  commonMistakeTrap: string;
+  questionText: string;
+  options: string[];
+  correctOptionIndex: number;
+  explanation: string;
+  solverAlgorithm?: SolverAlgorithm;
+  topperTrick?: string;
+  commonTrap?: string;
+  difficultyScore: number;
+  category: QuestionCategory;
+  pyqYear?: number;
+  year?: number;
+  ncertPageRef?: string;
+  difficulty?: QuestionDifficulty;
+  questionType?: QuestionType;
+  source?: QuestionSource;
+  isOfficialPYQ?: boolean;
+  conceptTested?: string;
+  commonMistakeTrap?: string;
   givenData?: string[];
   whatIsAsked?: string;
   requiredFormula?: string;
@@ -121,13 +136,13 @@ export interface SprintBlockItem {
   topicId?: string;
   title: string;
   blockType: 'Physics' | 'Chemistry' | 'Biology';
-  prompt: string; // Active recall prompt
+  prompt: string;
   revealedAnswer: {
     summary: string;
     formulasOrKeyFacts: string[];
     siUnitsOrConstants?: string[];
     operationalConditionsOrExceptions?: string[];
-    visualMechanismModel?: string; // OpenStax organic chemistry mechanism / stereochemistry flow
+    visualMechanismModel?: string;
     highYieldTraps?: string[];
   };
 }
@@ -152,6 +167,10 @@ export interface SyllabusSubjectTree {
 }
 
 export type TopicResourceCategory =
+  | 'tier1_detailed_notes'
+  | 'tier2_short_notes'
+  | 'tier3_why_how'
+  | 'tier4_topper_tricks'
   | 'detailed_notes'
   | 'short_notes'
   | 'sprint_10min'
@@ -179,6 +198,10 @@ export interface TopicResourceData {
   topicTitle: string;
   chapterTitle: string;
   subject: Subject;
+  detailedNCERTNotes?: string;
+  revisionShortNotes?: string;
+  conceptualWhyHowBreakdowns?: string;
+  topperTricksShortcutBank?: string[];
   detailedNotes?: string;
   shortNotes?: string;
   formulaBank?: string[];
@@ -198,9 +221,11 @@ export interface MistakeBankEntry {
   correctOptionIndex: number;
   userSelectedOptionIndex?: number;
   explanation: string;
+  solverAlgorithm?: SolverAlgorithm;
   conceptTested: string;
   commonMistakeTrap: string;
-  difficulty: QuestionDifficulty;
+  difficulty: QuestionDifficulty | number;
+  category?: QuestionCategory;
   errorCount: number;
   lastAttempted: string;
   revisionTags: string[];
@@ -233,7 +258,7 @@ export interface BlurtingSession {
   remembered: string[];
   partial: string[];
   missing: string[];
-  score: number; // 0 - 100
+  score: number;
 }
 
 export interface RecallGateSession {

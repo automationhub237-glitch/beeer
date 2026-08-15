@@ -27,11 +27,11 @@ import {
   INITIAL_EXTERNAL_RESOURCES
 } from '../data/knowledgeGraphData';
 import {
-  FULL_NEET_SYLLABUS,
-  FULL_SPRINT_BLOCKS,
-  FULL_QUESTION_BANK,
-  INITIAL_TOPIC_RESOURCES
-} from '../data/neetSyllabusData';
+  MASTER_SYLLABUS_TREE,
+  MASTER_SPRINT_BLOCKS,
+  MASTER_QUESTION_BANK,
+  MASTER_TOPIC_RESOURCES
+} from '../data/masterSyllabus';
 
 interface OSContextType {
   concepts: ConceptNode[];
@@ -91,10 +91,10 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [externalResources] = useState<ExternalResourceItem[]>(INITIAL_EXTERNAL_RESOURCES);
 
   // Catalogue
-  const [syllabus] = useState<SyllabusSubjectTree[]>(FULL_NEET_SYLLABUS);
-  const [sprintBlocks] = useState<SprintBlockItem[]>(FULL_SPRINT_BLOCKS);
-  const [questionBank] = useState<GraduatedQuestionItem[]>(FULL_QUESTION_BANK);
-  const [topicResources] = useState<TopicResourceData[]>(INITIAL_TOPIC_RESOURCES);
+  const [syllabus] = useState<SyllabusSubjectTree[]>(MASTER_SYLLABUS_TREE);
+  const [sprintBlocks] = useState<SprintBlockItem[]>(MASTER_SPRINT_BLOCKS);
+  const [questionBank] = useState<GraduatedQuestionItem[]>(MASTER_QUESTION_BANK);
+  const [topicResources] = useState<TopicResourceData[]>(MASTER_TOPIC_RESOURCES);
 
   // Local storage persisted states
   const [blurtingSessions, setBlurtingSessions] = useState<BlurtingSession[]>(() => {
@@ -330,12 +330,14 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         correctOptionIndex: q.correctOptionIndex,
         userSelectedOptionIndex,
         explanation: q.explanation,
-        conceptTested: q.conceptTested,
-        commonMistakeTrap: q.commonMistakeTrap,
-        difficulty: q.difficulty,
+        solverAlgorithm: q.solverAlgorithm,
+        conceptTested: q.conceptTested || 'Core Concept',
+        commonMistakeTrap: q.commonMistakeTrap || q.commonTrap || 'Misreading conditions',
+        difficulty: q.difficulty || q.difficultyScore || '0-20',
+        category: q.category,
         errorCount: 1,
         lastAttempted: new Date().toISOString(),
-        revisionTags: [q.subject, q.difficulty]
+        revisionTags: [q.subject]
       };
       return [newEntry, ...prev];
     });
