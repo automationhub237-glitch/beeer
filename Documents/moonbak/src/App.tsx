@@ -19,6 +19,7 @@ import { GlobalTeacherResource } from './components/GlobalTeacherResource';
 import { SQ3RSystem } from './components/SQ3RSystem';
 import { DailyRecall } from './components/DailyRecall';
 import { MistakeTrainingLoop } from './components/MistakeTrainingLoop';
+import { TopicResourceHub } from './components/TopicResourceHub';
 
 import {
   Layers,
@@ -41,10 +42,12 @@ import {
   Search,
   ChevronRight,
   Menu,
-  X
+  X,
+  FolderTree
 } from 'lucide-react';
 
 type NavigationTab =
+  | 'topic_resource_hub'
   | 'learn_backwards'
   | 'concept_graph'
   | 'science_connections'
@@ -67,12 +70,13 @@ type NavigationTab =
 
 const MainAppContent: React.FC = () => {
   const { concepts } = useOS();
-  const [activeTab, setActiveTab] = useState<NavigationTab>('learn_backwards');
+  const [activeTab, setActiveTab] = useState<NavigationTab>('topic_resource_hub');
   const [targetConceptId, setTargetConceptId] = useState<string>(concepts[0]?.id || 'colligative_properties');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   const navigationItems = [
+    { id: 'topic_resource_hub', label: '0. Topic Resource Hub', icon: FolderTree, category: 'Core Traversal' },
     { id: 'learn_backwards', label: '1. Learn Backwards', icon: Layers, category: 'Core Traversal' },
     { id: 'concept_graph', label: '2. Concept Graph', icon: Network, category: 'Core Traversal' },
     { id: 'science_connections', label: '17. Science Connections', icon: Globe2, category: 'Core Traversal' },
@@ -192,6 +196,10 @@ const MainAppContent: React.FC = () => {
 
         {/* Main Workspace Workspace Canvas */}
         <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 max-w-6xl mx-auto w-full">
+          {activeTab === 'topic_resource_hub' && (
+            <TopicResourceHub />
+          )}
+
           {activeTab === 'learn_backwards' && (
             <LearnBackwards onLaunchWhyEngine={handleRouteToWhy} />
           )}

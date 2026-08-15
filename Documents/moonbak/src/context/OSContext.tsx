@@ -11,7 +11,14 @@ import type {
   TransferSkillLog,
   UserCustomConnection,
   ExternalResourceItem,
-  SQ3RSession
+  SQ3RSession,
+  SyllabusSubjectTree,
+  SprintBlockItem,
+  GraduatedQuestionItem,
+  TopicResourceData,
+  MistakeBankEntry,
+  UserGamificationState,
+  TopicMasteryRecord
 } from '../types/neetOS';
 import {
   INITIAL_CONCEPTS,
@@ -19,6 +26,12 @@ import {
   INITIAL_SIMULATIONS,
   INITIAL_EXTERNAL_RESOURCES
 } from '../data/knowledgeGraphData';
+import {
+  FULL_NEET_SYLLABUS,
+  FULL_SPRINT_BLOCKS,
+  FULL_QUESTION_BANK,
+  INITIAL_TOPIC_RESOURCES
+} from '../data/neetSyllabusData';
 
 interface OSContextType {
   concepts: ConceptNode[];
@@ -33,7 +46,17 @@ interface OSContextType {
   transferLogs: TransferSkillLog[];
   customConnections: UserCustomConnection[];
   sq3rSessions: SQ3RSession[];
-  
+
+  // Expanded NEET Syllabus & Question Catalogue
+  syllabus: SyllabusSubjectTree[];
+  sprintBlocks: SprintBlockItem[];
+  questionBank: GraduatedQuestionItem[];
+  topicResources: TopicResourceData[];
+  mistakeBank: MistakeBankEntry[];
+  gamification: UserGamificationState;
+  userNotes: Record<string, string>; // topicId -> note
+  topicMastery: Record<string, TopicMasteryRecord>; // topicId -> record
+
   // Handlers
   addCustomConnection: (sourceId: string, targetId: string, rationale: string) => void;
   saveBlurtingSession: (session: BlurtingSession) => void;
@@ -45,6 +68,14 @@ interface OSContextType {
   addTransferLog: (log: Omit<TransferSkillLog, 'id' | 'timestamp'>) => void;
   saveSQ3RSession: (session: SQ3RSession) => void;
   importUserConcept: (concept: Omit<ConceptNode, 'id' | 'isVerified' | 'resourceType'>) => void;
+
+  // Handlers for Expanded Catalogue
+  addMistakeBankEntry: (question: GraduatedQuestionItem, userSelectedOptionIndex?: number) => void;
+  removeMistakeBankEntry: (id: string) => void;
+  saveUserTopicNote: (topicId: string, note: string) => void;
+  recordQuestionAttempt: (topicId: string, isCorrect: boolean, difficulty: string) => void;
+  addXP: (amount: number) => void;
+  getRecommendedReviewTopics: () => string[];
 }
 
 const OSContext = createContext<OSContextType | undefined>(undefined);
@@ -59,6 +90,13 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [simulations] = useState<ScienceSimulation[]>(INITIAL_SIMULATIONS);
   const [externalResources] = useState<ExternalResourceItem[]>(INITIAL_EXTERNAL_RESOURCES);
 
+  // Catalogue
+  const [syllabus] = useState<SyllabusSubjectTree[]>(FULL_NEET_SYLLABUS);
+  const [sprintBlocks] = useState<SprintBlockItem[]>(FULL_SPRINT_BLOCKS);
+  const [questionBank] = useState<GraduatedQuestionItem[]>(FULL_QUESTION_BANK);
+  const [topicResources] = useState<TopicResourceData[]>(INITIAL_TOPIC_RESOURCES);
+
+  // Local storage persisted states
   const [blurtingSessions, setBlurtingSessions] = useState<BlurtingSession[]>(() => {
     const saved = localStorage.getItem('neet_os_blurting');
     return saved ? JSON.parse(saved) : [];
@@ -109,7 +147,35 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Storage persistence effects
+  // Expanded Feature States
+  const [mistakeBank, setMistakeBank] = useState<MistakeBankEntry[]>(() => {
+    const saved = localStorage.getItem('neet_os_mistake_bank');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [userNotes, setUserNotes] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem('neet_os_user_notes');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [gamification, setGamification] = useState<UserGamificationState>(() => {
+    const saved = localStorage.getItem('neet_os_gamification');
+    return saved ? JSON.parse(saved) : {
+      xp: 120,
+      streakDays: 3,
+      lastActiveDate: new Date().toISOString().split('T')[0],
+      completedSprintSessions: 2,
+      completedAttackSessions: 1,
+      personalBests: {}
+    };
+  });
+
+  const [topicMastery, setTopicMastery] = useState<Record<string, TopicMasteryRecord>>(() => {
+    const saved = localStorage.getItem('neet_os_topic_mastery');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  // Persistence Effects
   useEffect(() => {
     localStorage.setItem('neet_os_concepts', JSON.stringify(concepts));
   }, [concepts]);
@@ -146,6 +212,23 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     localStorage.setItem('neet_os_sq3r', JSON.stringify(sq3rSessions));
   }, [sq3rSessions]);
 
+  useEffect(() => {
+    localStorage.setItem('neet_os_mistake_bank', JSON.stringify(mistakeBank));
+  }, [mistakeBank]);
+
+  useEffect(() => {
+    localStorage.setItem('neet_os_user_notes', JSON.stringify(userNotes));
+  }, [userNotes]);
+
+  useEffect(() => {
+    localStorage.setItem('neet_os_gamification', JSON.stringify(gamification));
+  }, [gamification]);
+
+  useEffect(() => {
+    localStorage.setItem('neet_os_topic_mastery', JSON.stringify(topicMastery));
+  }, [topicMastery]);
+
+  // Handlers
   const addCustomConnection = (sourceId: string, targetId: string, rationale: string) => {
     const newConn: UserCustomConnection = {
       id: 'conn_' + Date.now(),
@@ -222,6 +305,99 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     setConcepts(prev => [...prev, newConcept]);
   };
 
+  // Expanded Catalogue Handlers
+  const addMistakeBankEntry = (q: GraduatedQuestionItem, userSelectedOptionIndex?: number) => {
+    setMistakeBank(prev => {
+      const existingIdx = prev.findIndex(m => m.questionId === q.id);
+      if (existingIdx >= 0) {
+        const updated = [...prev];
+        updated[existingIdx] = {
+          ...updated[existingIdx],
+          errorCount: updated[existingIdx].errorCount + 1,
+          lastAttempted: new Date().toISOString(),
+          userSelectedOptionIndex
+        };
+        return updated;
+      }
+      const newEntry: MistakeBankEntry = {
+        id: 'mb_' + Date.now(),
+        questionId: q.id,
+        questionText: q.questionText,
+        subject: q.subject,
+        chapter: q.chapter,
+        topic: q.topic,
+        options: q.options,
+        correctOptionIndex: q.correctOptionIndex,
+        userSelectedOptionIndex,
+        explanation: q.explanation,
+        conceptTested: q.conceptTested,
+        commonMistakeTrap: q.commonMistakeTrap,
+        difficulty: q.difficulty,
+        errorCount: 1,
+        lastAttempted: new Date().toISOString(),
+        revisionTags: [q.subject, q.difficulty]
+      };
+      return [newEntry, ...prev];
+    });
+  };
+
+  const removeMistakeBankEntry = (id: string) => {
+    setMistakeBank(prev => prev.filter(m => m.id !== id));
+  };
+
+  const saveUserTopicNote = (topicId: string, note: string) => {
+    setUserNotes(prev => ({
+      ...prev,
+      [topicId]: note
+    }));
+  };
+
+  const addXP = (amount: number) => {
+    setGamification(prev => ({
+      ...prev,
+      xp: prev.xp + amount
+    }));
+  };
+
+  const recordQuestionAttempt = (topicId: string, isCorrect: boolean, _difficulty: string) => {
+    setTopicMastery(prev => {
+      const current = prev[topicId] || {
+        topicId,
+        subject: 'Physics',
+        attempted: 0,
+        correct: 0,
+        accuracy: 0,
+        lastAttempted: new Date().toISOString()
+      };
+      const attempted = current.attempted + 1;
+      const correct = current.correct + (isCorrect ? 1 : 0);
+      const accuracy = Math.round((correct / attempted) * 100);
+      return {
+        ...prev,
+        [topicId]: {
+          ...current,
+          attempted,
+          correct,
+          accuracy,
+          lastAttempted: new Date().toISOString()
+        }
+      };
+    });
+
+    if (isCorrect) {
+      addXP(15);
+    }
+  };
+
+  const getRecommendedReviewTopics = (): string[] => {
+    const entries = Object.entries(topicMastery);
+    if (entries.length === 0) return ['phy_1d_motion', 'chem_raoult_colligative', 'bio_photosynthesis'];
+
+    // Sort by accuracy ascending, then last attempted
+    entries.sort((a, b) => a[1].accuracy - b[1].accuracy);
+    return entries.slice(0, 3).map(e => e[0]);
+  };
+
   return (
     <OSContext.Provider
       value={{
@@ -237,6 +413,14 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         transferLogs,
         customConnections,
         sq3rSessions,
+        syllabus,
+        sprintBlocks,
+        questionBank,
+        topicResources,
+        mistakeBank,
+        gamification,
+        userNotes,
+        topicMastery,
         addCustomConnection,
         saveBlurtingSession,
         saveRecallGateSession,
@@ -246,7 +430,13 @@ export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         saveDailySnapshot,
         addTransferLog,
         saveSQ3RSession,
-        importUserConcept
+        importUserConcept,
+        addMistakeBankEntry,
+        removeMistakeBankEntry,
+        saveUserTopicNote,
+        recordQuestionAttempt,
+        addXP,
+        getRecommendedReviewTopics
       }}
     >
       {children}
