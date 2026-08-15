@@ -1,5 +1,11 @@
 export type Subject = 'Physics' | 'Chemistry' | 'Biology' | 'Cross-Disciplinary';
 
+export type QuestionDifficulty = '0-20' | '20-50' | '50+' | 'CYQ';
+
+export type QuestionType = 'MCQ' | 'Assertion-Reason' | 'Statement-based' | 'Match the following';
+
+export type QuestionSource = 'NCERT' | 'OpenStax' | 'Official PYQ' | 'Generated Practice';
+
 export type FailureLayer = 1 | 2 | 3 | 4 | 5 | 6;
 
 export const FAILURE_LAYER_DESCRIPTIONS: Record<FailureLayer, { name: string; description: string; action: string }> = {
@@ -82,6 +88,140 @@ export interface PYQItem {
   numericalAnswer?: string;
   year?: number;
   integrityLabel: 'OFFICIAL / VERIFIED' | 'USER IMPORTED' | 'EXTERNAL RESOURCE' | 'AI GENERATED';
+}
+
+export interface GraduatedQuestionItem {
+  id: string;
+  questionText: string;
+  options: string[];
+  correctOptionIndex: number;
+  explanation: string;
+  subject: Subject;
+  chapter: string;
+  topic: string;
+  topicId?: string;
+  difficulty: QuestionDifficulty;
+  questionType: QuestionType;
+  source: QuestionSource;
+  year?: number; // Present ONLY if authentic past NEET PYQ
+  isOfficialPYQ: boolean;
+  conceptTested: string;
+  commonMistakeTrap: string;
+  givenData?: string[];
+  whatIsAsked?: string;
+  requiredFormula?: string;
+  physicalModelHint?: string;
+}
+
+export interface SprintBlockItem {
+  id: string;
+  subject: Subject;
+  chapter: string;
+  topic: string;
+  topicId?: string;
+  title: string;
+  blockType: 'Physics' | 'Chemistry' | 'Biology';
+  prompt: string; // Active recall prompt
+  revealedAnswer: {
+    summary: string;
+    formulasOrKeyFacts: string[];
+    siUnitsOrConstants?: string[];
+    operationalConditionsOrExceptions?: string[];
+    visualMechanismModel?: string; // OpenStax organic chemistry mechanism / stereochemistry flow
+    highYieldTraps?: string[];
+  };
+}
+
+export interface SyllabusTopicNode {
+  id: string;
+  title: string;
+  summary?: string;
+}
+
+export interface SyllabusChapterNode {
+  id: string;
+  title: string;
+  classLevel?: '11' | '12' | 'General';
+  category?: 'Physical' | 'Inorganic' | 'Organic' | 'Botany' | 'Zoology' | 'General';
+  topics: SyllabusTopicNode[];
+}
+
+export interface SyllabusSubjectTree {
+  subject: Subject;
+  chapters: SyllabusChapterNode[];
+}
+
+export type TopicResourceCategory =
+  | 'detailed_notes'
+  | 'short_notes'
+  | 'sprint_10min'
+  | 'attack_10min'
+  | 'formula_bank'
+  | 'ncert_facts'
+  | 'pyqs'
+  | 'cyqs'
+  | 'easy_questions'
+  | 'medium_questions'
+  | 'hard_questions'
+  | 'common_mistakes'
+  | 'flashcards'
+  | 'local_notes'
+  | 'progress';
+
+export interface FlashcardItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface TopicResourceData {
+  topicId: string;
+  topicTitle: string;
+  chapterTitle: string;
+  subject: Subject;
+  detailedNotes?: string;
+  shortNotes?: string;
+  formulaBank?: string[];
+  ncertFacts?: string[];
+  commonMistakes?: string[];
+  flashcards?: FlashcardItem[];
+}
+
+export interface MistakeBankEntry {
+  id: string;
+  questionId: string;
+  questionText: string;
+  subject: Subject;
+  chapter: string;
+  topic: string;
+  options: string[];
+  correctOptionIndex: number;
+  userSelectedOptionIndex?: number;
+  explanation: string;
+  conceptTested: string;
+  commonMistakeTrap: string;
+  difficulty: QuestionDifficulty;
+  errorCount: number;
+  lastAttempted: string;
+  revisionTags: string[];
+}
+
+export interface UserGamificationState {
+  xp: number;
+  streakDays: number;
+  lastActiveDate: string;
+  completedSprintSessions: number;
+  completedAttackSessions: number;
+  personalBests: Record<string, number>;
+}
+
+export interface TopicMasteryRecord {
+  topicId: string;
+  subject: Subject;
+  attempted: number;
+  correct: number;
+  accuracy: number;
+  lastAttempted: string;
 }
 
 export interface BlurtingSession {
