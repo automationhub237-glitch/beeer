@@ -31,7 +31,7 @@ import {
   FULL_SPRINT_BLOCKS,
   FULL_QUESTION_BANK,
   INITIAL_TOPIC_RESOURCES
-} from '../data/neetSyllabusData';
+} from '../data/masterSyllabus';
 
 interface OSContextType {
   concepts: ConceptNode[];

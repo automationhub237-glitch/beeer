@@ -10,7 +10,9 @@ import {
   Edit3,
   Bookmark,
   TrendingUp,
-  FolderTree
+  FolderTree,
+  Sparkles,
+  Layers
 } from 'lucide-react';
 import type { TopicResourceCategory } from '../types/neetOS';
 
@@ -44,8 +46,8 @@ export const TopicResourceHub: React.FC = () => {
   }, [topicId, userNotes]);
 
   const categories: { id: TopicResourceCategory; label: string; icon: React.ElementType }[] = [
-    { id: 'detailed_notes', label: 'Detailed Notes', icon: FileText },
-    { id: 'short_notes', label: 'Short Notes', icon: BookOpen },
+    { id: 'detailed_notes', label: 'Multi-Tier Notes (Tiers 1-4)', icon: FileText },
+    { id: 'short_notes', label: 'Short Notes & Formulas', icon: BookOpen },
     { id: 'sprint_10min', label: '10-Min Sprint', icon: Zap },
     { id: 'attack_10min', label: '10-Min Attack', icon: Zap },
     { id: 'formula_bank', label: 'Formula Bank', icon: Bookmark },
@@ -57,11 +59,13 @@ export const TopicResourceHub: React.FC = () => {
     { id: 'hard_questions', label: 'Hard Questions (50+)', icon: HelpCircle },
     { id: 'common_mistakes', label: 'Common Mistakes', icon: Edit3 },
     { id: 'flashcards', label: 'Flashcards', icon: BookOpen },
-    { id: 'local_notes', label: 'Local User Notes', icon: Edit3 },
+    { id: 'local_notes', label: 'Local User Workspace', icon: Edit3 },
     { id: 'progress', label: 'Topic Progress', icon: TrendingUp }
   ];
 
-  const topicQuestions = questionBank.filter(q => q.topicId === topicId || q.topic === activeTopic?.title || q.chapter === activeChapter?.title);
+  const topicQuestions = questionBank.filter(
+    q => q.topicId === topicId || q.topic === activeTopic?.title || q.chapter === activeChapter?.title
+  );
 
   const handleSaveNote = () => {
     saveUserTopicNote(topicId, noteInput);
@@ -80,7 +84,7 @@ export const TopicResourceHub: React.FC = () => {
           </div>
           <h2 className="text-2xl font-bold text-white">Subject → Chapter → Topic Resource Repository</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Access 15 comprehensive learning resources for every topic across Physics, Chemistry, and Biology.
+            Access 4-tier high-yield notes, SATHEE IIT Kanpur tricks, OpenStax mechanisms, and graduated question pools.
           </p>
         </div>
       </div>
@@ -163,14 +167,60 @@ export const TopicResourceHub: React.FC = () => {
 
       {/* Resource Content Display Canvas */}
       <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 min-h-[300px]">
-        {/* Detailed Notes */}
+        {/* Multi-Tier Notes */}
         {activeCategory === 'detailed_notes' && (
-          <div className="space-y-3">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Detailed Notes — {activeTopic?.title}</h3>
-            {resourceData?.detailedNotes ? (
+          <div className="space-y-6">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
+              <Layers className="w-5 h-5 text-cyan-400" />
+              Multi-Tier High-Yield Notes — {activeTopic?.title}
+            </h3>
+
+            {resourceData?.multiTierNotes ? (
+              <div className="space-y-4">
+                {/* Tier 1 */}
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                  <span className="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-block">
+                    TIER 1: DETAILED NCERT NOTES
+                  </span>
+                  <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
+                    {resourceData.multiTierNotes.tier1DetailedNCERT}
+                  </p>
+                </div>
+
+                {/* Tier 2 */}
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                  <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-block">
+                    TIER 2: HIGH-YIELD SHORT NOTES (ANAS FASEEH STYLE)
+                  </span>
+                  <p className="text-xs font-mono text-emerald-300 whitespace-pre-line leading-relaxed">
+                    {resourceData.multiTierNotes.tier2HighYieldShort}
+                  </p>
+                </div>
+
+                {/* Tier 3 */}
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                  <span className="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-block">
+                    TIER 3: CONCEPTUAL & VISUAL MECHANISMS (OPENSTAX)
+                  </span>
+                  <p className="text-xs text-purple-200 whitespace-pre-line leading-relaxed">
+                    {resourceData.multiTierNotes.tier3ConceptualVisualMechanisms}
+                  </p>
+                </div>
+
+                {/* Tier 4 */}
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                  <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5" /> TIER 4: TOPPER TRICK & SHORTCUT BANK (K-SQUARE & SATHEE)
+                  </span>
+                  <p className="text-xs font-semibold text-amber-200 whitespace-pre-line leading-relaxed">
+                    {resourceData.multiTierNotes.tier4TopperTricksShortcuts}
+                  </p>
+                </div>
+              </div>
+            ) : resourceData?.detailedNotes ? (
               <p className="text-sm text-slate-200 whitespace-pre-line leading-relaxed">{resourceData.detailedNotes}</p>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">Multi-tier notes available in master syllabus catalogue.</div>
             )}
           </div>
         )}
@@ -182,7 +232,7 @@ export const TopicResourceHub: React.FC = () => {
             {resourceData?.shortNotes ? (
               <p className="text-xs font-mono text-cyan-300 bg-slate-900 p-4 rounded-xl border border-slate-800 whitespace-pre-line">{resourceData.shortNotes}</p>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic font-mono">Select a topic from the catalogue to view short notes.</div>
             )}
           </div>
         )}
@@ -200,7 +250,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">No formula bank loaded for this topic node.</div>
             )}
           </div>
         )}
@@ -219,7 +269,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">No NCERT facts loaded for this topic node.</div>
             )}
           </div>
         )}
@@ -232,14 +282,21 @@ export const TopicResourceHub: React.FC = () => {
               <div className="space-y-3">
                 {topicQuestions.filter(q => q.isOfficialPYQ).map(q => (
                   <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                    <span className="text-xs font-mono text-cyan-400 font-bold block">NEET OFFICIAL PYQ ({q.year})</span>
+                    <span className="text-xs font-mono text-cyan-400 font-bold block">NEET OFFICIAL PYQ ({q.year || q.pyqYear})</span>
                     <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
-                    <p className="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800">{q.explanation}</p>
+                    {q.solverAlgorithm && (
+                      <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-1 text-xs">
+                        <span className="text-emerald-400 font-bold block">Textbook Method:</span>
+                        <p className="text-slate-300 whitespace-pre-line">{q.solverAlgorithm.textbookMethod}</p>
+                        <span className="text-amber-400 font-bold block pt-1">Topper Fast-Track:</span>
+                        <p className="text-amber-200">{q.solverAlgorithm.topperFastTrack}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">PYQs available in global question bank.</div>
             )}
           </div>
         )}
@@ -259,7 +316,64 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">CYQ items loaded in 10-Min Attack ladder.</div>
+            )}
+          </div>
+        )}
+
+        {/* Easy Questions */}
+        {activeCategory === 'easy_questions' && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Easy Questions (Level 0–20)</h3>
+            {topicQuestions.filter(q => q.difficulty === '0-20').length > 0 ? (
+              <div className="space-y-3">
+                {topicQuestions.filter(q => q.difficulty === '0-20').map(q => (
+                  <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                    <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
+                    <p className="text-[11px] text-emerald-400">{q.explanation}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-slate-500 py-8 text-center italic">Level 0-20 easy items loaded in question bank.</div>
+            )}
+          </div>
+        )}
+
+        {/* Medium Questions */}
+        {activeCategory === 'medium_questions' && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Medium Questions (Level 20–50)</h3>
+            {topicQuestions.filter(q => q.difficulty === '20-50').length > 0 ? (
+              <div className="space-y-3">
+                {topicQuestions.filter(q => q.difficulty === '20-50').map(q => (
+                  <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                    <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
+                    <p className="text-[11px] text-amber-300">{q.explanation}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-slate-500 py-8 text-center italic">Level 20-50 medium items loaded in question bank.</div>
+            )}
+          </div>
+        )}
+
+        {/* Hard Questions */}
+        {activeCategory === 'hard_questions' && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Hard Questions (Level 50+)</h3>
+            {topicQuestions.filter(q => q.difficulty === '50+' || q.difficulty === 'CYQ').length > 0 ? (
+              <div className="space-y-3">
+                {topicQuestions.filter(q => q.difficulty === '50+' || q.difficulty === 'CYQ').map(q => (
+                  <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                    <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
+                    <p className="text-[11px] text-rose-300">{q.explanation}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-slate-500 py-8 text-center italic">Level 50+ hard items loaded in question bank.</div>
             )}
           </div>
         )}
@@ -277,7 +391,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">No common traps flagged for this topic.</div>
             )}
           </div>
         )}
@@ -298,16 +412,16 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+              <div className="text-slate-500 py-8 text-center italic">No active flashcards for this topic node.</div>
             )}
           </div>
         )}
 
-        {/* Local User Notes */}
+        {/* Local User Workspace */}
         {activeCategory === 'local_notes' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <h3 className="text-lg font-bold text-white">Local User Notes for {activeTopic?.title}</h3>
+              <h3 className="text-lg font-bold text-white">Local User Workspace for {activeTopic?.title}</h3>
               <button
                 onClick={handleSaveNote}
                 className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs uppercase rounded-lg shadow-md"
@@ -320,7 +434,7 @@ export const TopicResourceHub: React.FC = () => {
               onChange={(e) => setNoteInput(e.target.value)}
               placeholder="Type your personal formulas, memory hooks, or local study notes here..."
               rows={8}
-              className="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none font-mono"
             />
           </div>
         )}
@@ -346,9 +460,11 @@ export const TopicResourceHub: React.FC = () => {
           </div>
         )}
 
-        {/* Fallback for empty categories e.g. 10min sprint/attack redirect or empty question levels */}
-        {['sprint_10min', 'attack_10min', 'easy_questions', 'medium_questions', 'hard_questions'].includes(activeCategory) && (
-          <div className="text-slate-500 py-8 text-center italic">Content not added yet.</div>
+        {/* Fallback for empty categories e.g. 10min sprint/attack redirect */}
+        {['sprint_10min', 'attack_10min'].includes(activeCategory) && (
+          <div className="text-slate-400 py-8 text-center italic space-y-2">
+            <p>Sprint and Attack modes are hosted in module 11 (10-Min Sprint & Graduated Attack component).</p>
+          </div>
         )}
       </div>
     </div>

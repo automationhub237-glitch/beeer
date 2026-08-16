@@ -11,7 +11,8 @@ import {
   Award,
   Sparkles,
   RotateCcw,
-  HelpCircle
+  HelpCircle,
+  Lightbulb
 } from 'lucide-react';
 import type { QuestionDifficulty } from '../types/neetOS';
 
@@ -424,7 +425,7 @@ export const FormulaSprint: React.FC = () => {
                     {getDifficultyBadge(currentQuestion.difficulty)}
                     {currentQuestion.isOfficialPYQ ? (
                       <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded text-[10px] font-mono">
-                        OFFICIAL PYQ ({currentQuestion.year})
+                        OFFICIAL PYQ ({currentQuestion.year || currentQuestion.pyqYear})
                       </span>
                     ) : (
                       <span className="px-2 py-0.5 bg-slate-900 text-slate-400 border border-slate-800 rounded text-[10px] font-mono">
@@ -518,10 +519,39 @@ export const FormulaSprint: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Explanation Box */}
-                  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block">Explanation</span>
-                    <p className="text-xs text-slate-300">{currentQuestion.explanation}</p>
+                  {/* 3-Part Solution Algorithm Display */}
+                  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block flex items-center gap-1.5">
+                      <Lightbulb className="w-4 h-4" /> 3-PART SOLUTION ALGORITHM ("HOW TO SOLVE IT")
+                    </span>
+
+                    {currentQuestion.solverAlgorithm ? (
+                      <div className="space-y-2 text-xs">
+                        <div className="p-3 bg-slate-950 rounded-lg border border-slate-800">
+                          <span className="text-cyan-300 font-bold block mb-1">1. Standard Textbook Method:</span>
+                          <p className="text-slate-200 whitespace-pre-line">{currentQuestion.solverAlgorithm.textbookMethod}</p>
+                        </div>
+
+                        <div className="p-3 bg-amber-950/40 rounded-lg border border-amber-500/30">
+                          <span className="text-amber-400 font-bold block mb-1 flex items-center gap-1">
+                            <Sparkles className="w-3.5 h-3.5" /> 2. Topper's Fast-Track Trick (15-Sec Shortcut):
+                          </span>
+                          <p className="text-amber-200">{currentQuestion.solverAlgorithm.topperFastTrack}</p>
+                        </div>
+
+                        <div className="p-3 bg-rose-950/40 rounded-lg border border-rose-500/30">
+                          <span className="text-rose-400 font-bold block mb-1 flex items-center gap-1">
+                            <AlertTriangle className="w-3.5 h-3.5" /> 3. Common Trap Warning (80% Blunder):
+                          </span>
+                          <p className="text-rose-200">{currentQuestion.solverAlgorithm.commonTrapWarning}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-slate-300 space-y-1">
+                        <p>{currentQuestion.explanation}</p>
+                      </div>
+                    )}
+
                     <div className="pt-2 border-t border-slate-800 flex flex-wrap gap-4 text-[11px] text-slate-400">
                       <span>Concept: {currentQuestion.conceptTested}</span>
                       <span>Trap: {currentQuestion.commonMistakeTrap}</span>
