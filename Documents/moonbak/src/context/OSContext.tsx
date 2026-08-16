@@ -24,7 +24,8 @@ import {
   INITIAL_CONCEPTS,
   INITIAL_PYQS,
   INITIAL_SIMULATIONS,
-  INITIAL_EXTERNAL_RESOURCES
+  INITIAL_EXTERNAL_RESOURCES,
+  buildConceptsFromSyllabus
 } from '../data/knowledgeGraphData';
 import {
   FULL_NEET_SYLLABUS,
@@ -82,8 +83,15 @@ const OSContext = createContext<OSContextType | undefined>(undefined);
 
 export const OSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [concepts, setConcepts] = useState<ConceptNode[]>(() => {
+    const allConcepts = buildConceptsFromSyllabus(FULL_NEET_SYLLABUS, INITIAL_CONCEPTS);
     const saved = localStorage.getItem('neet_os_concepts');
-    return saved ? JSON.parse(saved) : INITIAL_CONCEPTS;
+    if (!saved) return allConcepts;
+
+    // Merge user imported concepts with master syllabus concepts
+    const savedConcepts: ConceptNode[] = JSON.parse(saved);
+    const masterIds = new Set(allConcepts.map(c => c.id));
+    const userConcepts = savedConcepts.filter(c => !masterIds.has(c.id));
+    return [...allConcepts, ...userConcepts];
   });
 
   const [pyqs] = useState<PYQItem[]>(INITIAL_PYQS);

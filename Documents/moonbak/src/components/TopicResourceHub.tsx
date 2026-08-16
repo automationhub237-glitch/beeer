@@ -3,7 +3,6 @@ import { useOS } from '../context/OSContext';
 import {
   BookOpen,
   FileText,
-  Zap,
   CheckCircle2,
   HelpCircle,
   Award,
@@ -12,9 +11,112 @@ import {
   TrendingUp,
   FolderTree,
   Sparkles,
-  Layers
+  Layers,
+  ShieldCheck,
+  AlertTriangle,
+  Lock,
+  Check
 } from 'lucide-react';
-import type { TopicResourceCategory } from '../types/neetOS';
+import type { TopicResourceCategory, ResourceStatus, SyllabusSubjectTree, TopicResourceData, GraduatedQuestionItem } from '../types/neetOS';
+
+export interface AuditReport {
+  totalChapters: number;
+  totalTopics: number;
+  indexedTopicResources: number;
+  topicsWithNotes: number;
+  topicsWithFormulas: number;
+  topicsWithPYQs: number;
+  topicsWithCYQs: number;
+  completenessPercentage: number;
+  statusBreakdown: Record<ResourceStatus, number>;
+  unindexedTopics: { subject: string; chapter: string; topicTitle: string; topicId: string }[];
+  missingPYQTopics: { subject: string; chapter: string; topicTitle: string }[];
+  missingCYQTopics: { subject: string; chapter: string; topicTitle: string }[];
+}
+
+export function runSyllabusContentAudit(
+  syllabus: SyllabusSubjectTree[],
+  topicResources: TopicResourceData[],
+  questionBank: GraduatedQuestionItem[]
+): AuditReport {
+  let totalChapters = 0;
+  let totalTopics = 0;
+  const unindexedTopics: { subject: string; chapter: string; topicTitle: string; topicId: string }[] = [];
+  const missingPYQTopics: { subject: string; chapter: string; topicTitle: string }[] = [];
+  const missingCYQTopics: { subject: string; chapter: string; topicTitle: string }[] = [];
+
+  const statusBreakdown: Record<ResourceStatus, number> = {
+    AVAILABLE: 0,
+    'LINK ONLY': 0,
+    'LOGIN REQUIRED': 0,
+    PAYWALLED: 0,
+    UNAVAILABLE: 0,
+    'NEEDS VERIFICATION': 0
+  };
+
+  let topicsWithNotes = 0;
+  let topicsWithFormulas = 0;
+  let topicsWithPYQs = 0;
+  let topicsWithCYQs = 0;
+
+  syllabus.forEach(subjectTree => {
+    subjectNodeLoop:
+    subjectTree.chapters.forEach(ch => {
+      totalChapters++;
+      ch.topics.forEach(t => {
+        totalTopics++;
+
+        const res = topicResources.find(r => r.topicId === t.id || r.topicTitle.toLowerCase() === t.title.toLowerCase());
+        const tStatus: ResourceStatus = t.status || (res ? 'AVAILABLE' : 'UNAVAILABLE');
+        statusBreakdown[tStatus] = (statusBreakdown[tStatus] || 0) + 1;
+
+        if (res) {
+          if (res.detailedNotes || res.shortNotes || res.multiTierNotes) topicsWithNotes++;
+          if (res.formulaBank && res.formulaBank.length > 0) topicsWithFormulas++;
+        } else {
+          unindexedTopics.push({
+            subject: subjectTree.subject,
+            chapter: ch.title,
+            topicTitle: t.title,
+            topicId: t.id
+          });
+        }
+
+        const pyqs = questionBank.filter(q => (q.topicId === t.id || q.topic === t.title) && q.isOfficialPYQ);
+        if (pyqs.length > 0) {
+          topicsWithPYQs++;
+        } else {
+          missingPYQTopics.push({ subject: subjectTree.subject, chapter: ch.title, topicTitle: t.title });
+        }
+
+        const cyqs = questionBank.filter(q => (q.topicId === t.id || q.topic === t.title) && !q.isOfficialPYQ);
+        if (cyqs.length > 0) {
+          topicsWithCYQs++;
+        } else {
+          missingCYQTopics.push({ subject: subjectTree.subject, chapter: ch.title, topicTitle: t.title });
+        }
+      });
+    });
+  });
+
+  const indexedTopicResources = totalTopics - unindexedTopics.length;
+  const completenessPercentage = totalTopics > 0 ? Math.round((indexedTopicResources / totalTopics) * 100) : 0;
+
+  return {
+    totalChapters,
+    totalTopics,
+    indexedTopicResources,
+    topicsWithNotes,
+    topicsWithFormulas,
+    topicsWithPYQs,
+    topicsWithCYQs,
+    completenessPercentage,
+    statusBreakdown,
+    unindexedTopics,
+    missingPYQTopics,
+    missingCYQTopics
+  };
+}
 
 export const TopicResourceHub: React.FC = () => {
   const {
@@ -30,26 +132,25 @@ export const TopicResourceHub: React.FC = () => {
   const [selectedSubjectIndex, setSelectedSubjectIndex] = useState<number>(0);
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number>(0);
   const [selectedTopicIndex, setSelectedTopicIndex] = useState<number>(0);
-  const [activeCategory, setActiveCategory] = useState<TopicResourceCategory>('detailed_notes');
+  const [activeCategory, setActiveCategory] = useState<TopicResourceCategory | 'audit_dashboard'>('detailed_notes');
 
-  // Local Note Input State
   const activeSubjectTree = syllabus[selectedSubjectIndex] || syllabus[0];
   const activeChapter = activeSubjectTree?.chapters[selectedChapterIndex] || activeSubjectTree?.chapters[0];
   const activeTopic = activeChapter?.topics[selectedTopicIndex] || activeChapter?.topics[0];
 
   const topicId = activeTopic?.id || 'chem_raoult_colligative';
-  const resourceData = topicResources.find(r => r.topicId === topicId);
+  const resourceData = topicResources.find(r => r.topicId === topicId || r.topicTitle.toLowerCase() === activeTopic?.title.toLowerCase());
   const [noteInput, setNoteInput] = useState<string>(userNotes[topicId] || '');
 
   useEffect(() => {
     setNoteInput(userNotes[topicId] || '');
   }, [topicId, userNotes]);
 
-  const categories: { id: TopicResourceCategory; label: string; icon: React.ElementType }[] = [
+  const auditReport = runSyllabusContentAudit(syllabus, topicResources, questionBank);
+
+  const categories: { id: TopicResourceCategory | 'audit_dashboard'; label: string; icon: React.ElementType }[] = [
     { id: 'detailed_notes', label: 'Multi-Tier Notes (Tiers 1-4)', icon: FileText },
     { id: 'short_notes', label: 'Short Notes & Formulas', icon: BookOpen },
-    { id: 'sprint_10min', label: '10-Min Sprint', icon: Zap },
-    { id: 'attack_10min', label: '10-Min Attack', icon: Zap },
     { id: 'formula_bank', label: 'Formula Bank', icon: Bookmark },
     { id: 'ncert_facts', label: 'NCERT Facts', icon: CheckCircle2 },
     { id: 'pyqs', label: 'PYQs (Authentic)', icon: Award },
@@ -59,8 +160,9 @@ export const TopicResourceHub: React.FC = () => {
     { id: 'hard_questions', label: 'Hard Questions (50+)', icon: HelpCircle },
     { id: 'common_mistakes', label: 'Common Mistakes', icon: Edit3 },
     { id: 'flashcards', label: 'Flashcards', icon: BookOpen },
-    { id: 'local_notes', label: 'Local User Workspace', icon: Edit3 },
-    { id: 'progress', label: 'Topic Progress', icon: TrendingUp }
+    { id: 'local_notes', label: 'Local Workspace', icon: Edit3 },
+    { id: 'progress', label: 'Topic Progress', icon: TrendingUp },
+    { id: 'audit_dashboard', label: 'Content Audit Dashboard', icon: ShieldCheck }
   ];
 
   const topicQuestions = questionBank.filter(
@@ -73,6 +175,23 @@ export const TopicResourceHub: React.FC = () => {
 
   const mastery = topicMastery[topicId] || topicMastery[activeTopic?.title || ''] || { attempted: 0, correct: 0, accuracy: 0, lastAttempted: 'Not attempted yet' };
 
+  const renderResourceStatusBadge = (status: ResourceStatus = 'AVAILABLE') => {
+    switch (status) {
+      case 'AVAILABLE':
+        return <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono rounded font-bold">AVAILABLE (NO LOGIN)</span>;
+      case 'LINK ONLY':
+        return <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono rounded font-bold">LINK ONLY</span>;
+      case 'LOGIN REQUIRED':
+        return <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono rounded font-bold flex items-center gap-1"><Lock className="w-2.5 h-2.5" /> LOGIN REQUIRED</span>;
+      case 'PAYWALLED':
+        return <span className="px-2 py-0.5 bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-mono rounded font-bold">PAYWALLED</span>;
+      case 'UNAVAILABLE':
+        return <span className="px-2 py-0.5 bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-mono rounded">UNAVAILABLE</span>;
+      case 'NEEDS VERIFICATION':
+        return <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-mono rounded">NEEDS VERIFICATION</span>;
+    }
+  };
+
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-slate-100 shadow-xl space-y-6">
       {/* Header */}
@@ -80,12 +199,23 @@ export const TopicResourceHub: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
             <FolderTree className="w-3.5 h-3.5" />
-            2. TOPIC RESOURCE HUB (OFFICIAL SYLLABUS CATALOGUE)
+            MASTER SYLLABUS CATALOGUE & RESOURCE REPOSITORY
           </div>
-          <h2 className="text-2xl font-bold text-white">Subject → Chapter → Topic Resource Repository</h2>
+          <h2 className="text-2xl font-bold text-white">Single Source of Truth NEET Catalogue</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Access 4-tier high-yield notes, SATHEE IIT Kanpur tricks, OpenStax mechanisms, and graduated question pools.
+            Official NTA / NCERT syllabus hierarchy with verified free resources and live content completeness auditing.
           </p>
+        </div>
+
+        {/* Completeness Meter */}
+        <div className="flex items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800">
+          <div className="text-right">
+            <span className="text-[10px] font-mono uppercase text-slate-400 block">Syllabus Completeness</span>
+            <span className="text-lg font-bold text-cyan-400 font-mono">{auditReport.completenessPercentage}%</span>
+          </div>
+          <div className="w-12 h-12 rounded-full border-2 border-cyan-500/40 flex items-center justify-center bg-cyan-950/40">
+            <ShieldCheck className="w-6 h-6 text-cyan-400" />
+          </div>
         </div>
       </div>
 
@@ -121,7 +251,7 @@ export const TopicResourceHub: React.FC = () => {
             className="w-full bg-slate-900 border border-slate-800 text-xs text-white rounded-lg p-2.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
           >
             {activeSubjectTree?.chapters.map((ch, idx) => (
-              <option key={ch.id} value={idx}>{ch.title}</option>
+              <option key={ch.id} value={idx}>Class {ch.classLevel || '11'} • {ch.title}</option>
             ))}
           </select>
         </div>
@@ -149,9 +279,7 @@ export const TopicResourceHub: React.FC = () => {
           return (
             <button
               key={cat.id}
-              onClick={() => {
-                setActiveCategory(cat.id);
-              }}
+              onClick={() => setActiveCategory(cat.id)}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 isActive
                   ? 'bg-cyan-600 text-slate-950 font-bold shadow-lg shadow-cyan-950/40'
@@ -170,10 +298,13 @@ export const TopicResourceHub: React.FC = () => {
         {/* Multi-Tier Notes */}
         {activeCategory === 'detailed_notes' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
-              <Layers className="w-5 h-5 text-cyan-400" />
-              Multi-Tier High-Yield Notes — {activeTopic?.title}
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Layers className="w-5 h-5 text-cyan-400" />
+                Multi-Tier High-Yield Notes — {activeTopic?.title}
+              </h3>
+              {renderResourceStatusBadge(activeTopic?.status || (resourceData ? 'AVAILABLE' : 'UNAVAILABLE'))}
+            </div>
 
             {resourceData?.multiTierNotes ? (
               <div className="space-y-4">
@@ -190,7 +321,7 @@ export const TopicResourceHub: React.FC = () => {
                 {/* Tier 2 */}
                 <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
                   <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-block">
-                    TIER 2: HIGH-YIELD SHORT NOTES (ANAS FASEEH STYLE)
+                    TIER 2: HIGH-YIELD SHORT NOTES
                   </span>
                   <p className="text-xs font-mono text-emerald-300 whitespace-pre-line leading-relaxed">
                     {resourceData.multiTierNotes.tier2HighYieldShort}
@@ -200,7 +331,7 @@ export const TopicResourceHub: React.FC = () => {
                 {/* Tier 3 */}
                 <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
                   <span className="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-block">
-                    TIER 3: CONCEPTUAL & VISUAL MECHANISMS (OPENSTAX)
+                    TIER 3: CONCEPTUAL & VISUAL MECHANISMS
                   </span>
                   <p className="text-xs text-purple-200 whitespace-pre-line leading-relaxed">
                     {resourceData.multiTierNotes.tier3ConceptualVisualMechanisms}
@@ -210,7 +341,7 @@ export const TopicResourceHub: React.FC = () => {
                 {/* Tier 4 */}
                 <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
                   <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold rounded-md uppercase tracking-wider inline-flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5" /> TIER 4: TOPPER TRICK & SHORTCUT BANK (K-SQUARE & SATHEE)
+                    <Sparkles className="w-3.5 h-3.5" /> TIER 4: TOPPER TRICK & SHORTCUT BANK
                   </span>
                   <p className="text-xs font-semibold text-amber-200 whitespace-pre-line leading-relaxed">
                     {resourceData.multiTierNotes.tier4TopperTricksShortcuts}
@@ -218,9 +349,13 @@ export const TopicResourceHub: React.FC = () => {
                 </div>
               </div>
             ) : resourceData?.detailedNotes ? (
-              <p className="text-sm text-slate-200 whitespace-pre-line leading-relaxed">{resourceData.detailedNotes}</p>
+              <p className="text-xs text-slate-200 whitespace-pre-line leading-relaxed">{resourceData.detailedNotes}</p>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Multi-tier notes available in master syllabus catalogue.</div>
+              <div className="p-8 text-center text-slate-500 italic space-y-2">
+                <AlertTriangle className="w-8 h-8 text-amber-500/60 mx-auto" />
+                <p className="font-semibold text-slate-400">Content not yet indexed</p>
+                <p className="text-xs text-slate-600">This topic tree node exists in the official syllabus catalogue and is queued for verified notes ingestion.</p>
+              </div>
             )}
           </div>
         )}
@@ -232,7 +367,10 @@ export const TopicResourceHub: React.FC = () => {
             {resourceData?.shortNotes ? (
               <p className="text-xs font-mono text-cyan-300 bg-slate-900 p-4 rounded-xl border border-slate-800 whitespace-pre-line">{resourceData.shortNotes}</p>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic font-mono">Select a topic from the catalogue to view short notes.</div>
+              <div className="p-8 text-center text-slate-500 italic font-mono space-y-1">
+                <p className="text-slate-400 font-sans">Content not yet indexed</p>
+                <p className="text-xs text-slate-600 font-sans">Select another topic from the catalogue or check the audit dashboard.</p>
+              </div>
             )}
           </div>
         )}
@@ -250,7 +388,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">No formula bank loaded for this topic node.</div>
+              <div className="p-8 text-center text-slate-500 italic font-mono">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -269,7 +407,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">No NCERT facts loaded for this topic node.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -277,7 +415,10 @@ export const TopicResourceHub: React.FC = () => {
         {/* PYQs */}
         {activeCategory === 'pyqs' && (
           <div className="space-y-3">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Authentic Past NEET Questions (PYQs)</h3>
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
+              <span>Authentic Past NEET Questions (PYQs)</span>
+              <span className="text-xs text-cyan-400 font-mono">VERIFIED PYQs</span>
+            </h3>
             {topicQuestions.filter(q => q.isOfficialPYQ).length > 0 ? (
               <div className="space-y-3">
                 {topicQuestions.filter(q => q.isOfficialPYQ).map(q => (
@@ -296,7 +437,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">PYQs available in global question bank.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed (No official PYQs tagged for this specific subtopic)</div>
             )}
           </div>
         )}
@@ -304,19 +445,22 @@ export const TopicResourceHub: React.FC = () => {
         {/* CYQs */}
         {activeCategory === 'cyqs' && (
           <div className="space-y-3">
-            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2">Conceptual / Challenge Yield Questions (CYQs)</h3>
-            {topicQuestions.filter(q => q.difficulty === 'CYQ' && !q.isOfficialPYQ).length > 0 ? (
+            <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
+              <span>Conceptual / Curated Practice Questions (CYQs)</span>
+              <span className="text-xs text-amber-400 font-mono">NON-PYQ PRACTICE</span>
+            </h3>
+            {topicQuestions.filter(q => !q.isOfficialPYQ).length > 0 ? (
               <div className="space-y-3">
-                {topicQuestions.filter(q => q.difficulty === 'CYQ' && !q.isOfficialPYQ).map(q => (
+                {topicQuestions.filter(q => !q.isOfficialPYQ).map(q => (
                   <div key={q.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                    <span className="text-xs font-mono text-rose-400 font-bold block">CYQ CHALLENGE ITEM</span>
+                    <span className="text-xs font-mono text-amber-400 font-bold block">CYQ CURATED PRACTICE ITEM</span>
                     <p className="text-xs text-slate-200 font-semibold">{q.questionText}</p>
                     <p className="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800">{q.explanation}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">CYQ items loaded in 10-Min Attack ladder.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -335,7 +479,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Level 0-20 easy items loaded in question bank.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -354,7 +498,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Level 20-50 medium items loaded in question bank.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -373,7 +517,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">Level 50+ hard items loaded in question bank.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -391,7 +535,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">No common traps flagged for this topic.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -412,7 +556,7 @@ export const TopicResourceHub: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-slate-500 py-8 text-center italic">No active flashcards for this topic node.</div>
+              <div className="p-8 text-center text-slate-500 italic">Content not yet indexed</div>
             )}
           </div>
         )}
@@ -460,10 +604,97 @@ export const TopicResourceHub: React.FC = () => {
           </div>
         )}
 
-        {/* Fallback for empty categories e.g. 10min sprint/attack redirect */}
-        {['sprint_10min', 'attack_10min'].includes(activeCategory) && (
-          <div className="text-slate-400 py-8 text-center italic space-y-2">
-            <p>Sprint and Attack modes are hosted in module 11 (10-Min Sprint & Graduated Attack component).</p>
+        {/* AUTOMATED CONTENT AUDIT DASHBOARD */}
+        {activeCategory === 'audit_dashboard' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-cyan-400" />
+                  Automated Content Audit & Integrity Dashboard
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Developer audit tracking syllabus structure completeness, resource status, and PYQ/CYQ mapping.
+                </p>
+              </div>
+
+              <div className="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono rounded font-bold">
+                COMPLETENESS: {auditReport.completenessPercentage}%
+              </div>
+            </div>
+
+            {/* Metric Cards Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+                <span className="text-[11px] font-mono text-slate-400 uppercase block">Total Chapters</span>
+                <span className="text-2xl font-bold text-white">{auditReport.totalChapters}</span>
+              </div>
+              <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+                <span className="text-[11px] font-mono text-slate-400 uppercase block">Total Topics</span>
+                <span className="text-2xl font-bold text-cyan-400">{auditReport.totalTopics}</span>
+              </div>
+              <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+                <span className="text-[11px] font-mono text-slate-400 uppercase block">Topics with Notes</span>
+                <span className="text-2xl font-bold text-emerald-400">{auditReport.topicsWithNotes}</span>
+              </div>
+              <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+                <span className="text-[11px] font-mono text-slate-400 uppercase block">Topics with Formulas</span>
+                <span className="text-2xl font-bold text-amber-400">{auditReport.topicsWithFormulas}</span>
+              </div>
+            </div>
+
+            {/* Resource Status Breakdown */}
+            <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Resource Status Breakdown across Master Syllabus</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-emerald-400 font-medium">AVAILABLE (NO LOGIN)</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['AVAILABLE']}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-cyan-400 font-medium">LINK ONLY</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['LINK ONLY']}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-amber-400 font-medium">LOGIN REQUIRED</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['LOGIN REQUIRED']}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-rose-400 font-medium">PAYWALLED</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['PAYWALLED']}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-slate-400 font-medium">UNAVAILABLE</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['UNAVAILABLE']}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                  <span className="text-purple-400 font-medium">NEEDS VERIFICATION</span>
+                  <span className="font-mono font-bold text-white">{auditReport.statusBreakdown['NEEDS VERIFICATION']}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Honest Unindexed Topics Audit List */}
+            <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-3">
+              <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4" />
+                Unindexed Topics Queue (Queued for verified notes/PYQ ingestion) ({auditReport.unindexedTopics.length})
+              </h4>
+              {auditReport.unindexedTopics.length > 0 ? (
+                <div className="max-h-48 overflow-y-auto space-y-1.5 pr-2">
+                  {auditReport.unindexedTopics.map((item, idx) => (
+                    <div key={idx} className="p-2 bg-slate-950 rounded border border-slate-800 text-xs flex justify-between items-center text-slate-300">
+                      <span>[{item.subject}] {item.chapter} → <strong className="text-white">{item.topicTitle}</strong></span>
+                      <span className="text-[10px] text-amber-400 font-mono">Content not yet indexed</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-emerald-400 flex items-center gap-1">
+                  <Check className="w-4 h-4" /> 100% of topics in the Master Syllabus Catalogue are fully indexed!
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>

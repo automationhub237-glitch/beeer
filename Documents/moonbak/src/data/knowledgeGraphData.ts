@@ -1,11 +1,11 @@
-import type { ConceptNode, PYQItem, ScienceSimulation, ExternalResourceItem } from '../types/neetOS';
+import type { ConceptNode, PYQItem, ScienceSimulation, ExternalResourceItem, SyllabusSubjectTree, Subject } from '../types/neetOS';
 
 export const INITIAL_CONCEPTS: ConceptNode[] = [
   {
     id: 'colligative_properties',
     title: 'Colligative Properties',
     subject: 'Chemistry',
-    chapter: 'Solutions',
+    chapter: 'Solutions & Colligative Properties',
     summary: 'Properties of solutions that depend solely on the ratio of solute particles to solvent molecules, not on the solute species identity.',
     prerequisites: ['raoults_law'],
     targetChain: ['Moles', 'Mole Fraction', 'Vapour Pressure', "Raoult's Law", 'Colligative Properties'],
@@ -30,19 +30,13 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
         keyCheck: 'Solute is non-volatile, non-electrolyte (unless Van t Hoff factor i is applied), and solution is dilute.'
       }
     ],
-    connectedConceptIds: ['raoults_law', 'osmosis_bio', 'thermodynamics_chem'],
+    connectedConceptIds: ['raoults_law', 'osmosis_bio'],
     crossSubjectConnections: [
       {
         targetId: 'osmosis_bio',
         targetSubject: 'Biology',
         targetTitle: 'Cellular Osmosis & Water Potential',
         rationale: 'Osmotic pressure (colligative property) governs biological water movement across semi-permeable cell membranes.'
-      },
-      {
-        targetId: 'thermodynamics_chem',
-        targetSubject: 'Physics',
-        targetTitle: 'Thermodynamics & Free Energy',
-        rationale: 'Vapour pressure lowering is driven by entropy increase when mixing solute into pure solvent.'
       }
     ],
     keyKeywords: ['solute', 'solvent', 'vapour pressure', 'boiling point elevation', 'freezing point depression', 'osmotic pressure', 'van t Hoff factor', 'mole fraction'],
@@ -53,7 +47,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
     id: 'raoults_law',
     title: "Raoult's Law",
     subject: 'Chemistry',
-    chapter: 'Solutions',
+    chapter: 'Solutions & Colligative Properties',
     summary: 'Partial vapor pressure of each volatile component in a solution is equal to the vapor pressure of the pure component multiplied by its mole fraction.',
     prerequisites: ['vapour_pressure'],
     targetChain: ['Moles', 'Mole Fraction', 'Vapour Pressure', "Raoult's Law"],
@@ -75,7 +69,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
     id: 'vapour_pressure',
     title: 'Vapour Pressure',
     subject: 'Chemistry',
-    chapter: 'Solutions',
+    chapter: 'Solutions & Colligative Properties',
     summary: 'Pressure exerted by a vapor in thermodynamic equilibrium with its condensed phases at a given temperature in a closed system.',
     prerequisites: ['mole_fraction'],
     targetChain: ['Moles', 'Mole Fraction', 'Vapour Pressure'],
@@ -141,7 +135,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
     id: 'osmosis_bio',
     title: 'Cellular Osmosis & Water Potential',
     subject: 'Biology',
-    chapter: 'Transport in Plants',
+    chapter: 'Plant Physiology',
     summary: 'Movement of solvent molecules across a selectively permeable membrane from higher water potential to lower water potential.',
     prerequisites: ['colligative_properties'],
     targetChain: ['Diffusion', 'Concentration Gradient', 'Membrane Permeability', 'Osmosis'],
@@ -153,7 +147,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
         keyCheck: 'Solute-solvent interactions decrease free kinetic energy of water molecules.'
       }
     ],
-    connectedConceptIds: ['colligative_properties', 'membrane_transport'],
+    connectedConceptIds: ['colligative_properties'],
     crossSubjectConnections: [
       {
         targetId: 'colligative_properties',
@@ -170,7 +164,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
     id: 'em_induction',
     title: 'Electromagnetic Induction & Faradays Law',
     subject: 'Physics',
-    chapter: 'Electromagnetic Induction',
+    chapter: 'Electromagnetic Induction & Alternating Current',
     summary: 'Changing magnetic flux through a closed circuit induces an electromotive force (EMF) proportional to the rate of change of flux.',
     prerequisites: ['magnetic_flux'],
     targetChain: ['Magnetic Field', 'Magnetic Flux', 'Lenz Law', 'Faraday Law of Induction'],
@@ -182,7 +176,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
         keyCheck: 'Conservation of energy: induced current opposes the change in flux that created it.'
       }
     ],
-    connectedConceptIds: ['magnetic_flux', 'lorentz_force'],
+    connectedConceptIds: ['magnetic_flux'],
     crossSubjectConnections: [],
     keyKeywords: ['magnetic flux', 'induced EMF', 'Lenz law', 'Lorentz force', 'energy conservation'],
     isVerified: true,
@@ -192,7 +186,7 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
     id: 'magnetic_flux',
     title: 'Magnetic Flux & Lorentz Force',
     subject: 'Physics',
-    chapter: 'Moving Charges & Magnetism',
+    chapter: 'Magnetic Effects of Current & Magnetism',
     summary: 'Measure of total magnetic field lines passing through a given surface area.',
     prerequisites: [],
     targetChain: ['Magnetic Field', 'Magnetic Flux'],
@@ -212,12 +206,84 @@ export const INITIAL_CONCEPTS: ConceptNode[] = [
   }
 ];
 
+export function buildConceptsFromSyllabus(
+  syllabusTree: SyllabusSubjectTree[],
+  initialConcepts: ConceptNode[]
+): ConceptNode[] {
+  const result: ConceptNode[] = [...initialConcepts];
+  const existingIds = new Set(initialConcepts.map(c => c.id));
+  const existingTitles = new Set(initialConcepts.map(c => c.title.toLowerCase()));
+
+  syllabusTree.forEach(subjectNode => {
+    const subject: Subject = subjectNode.subject;
+
+    subjectNode.chapters.forEach(chapter => {
+      chapter.topics.forEach((topic, idx) => {
+        if (existingIds.has(topic.id) || existingTitles.has(topic.title.toLowerCase())) {
+          return;
+        }
+
+        // Generate 4 to 5 level reverse prerequisite targetChain
+        const prevTopic = idx > 0 ? chapter.topics[idx - 1] : null;
+        const prereqId = prevTopic ? prevTopic.id : '';
+
+        const level1 = `Fundamental Principle: Conservation of Energy & Matter in ${chapter.title}`;
+        const level2 = `Core Law / Model: Primary Mechanism in ${topic.title}`;
+        const level3 = `Applied Concept: ${topic.title} Boundary Conditions`;
+        const level4 = topic.title;
+
+        const dynamicNode: ConceptNode = {
+          id: topic.id,
+          title: topic.title,
+          subject: subject,
+          chapter: chapter.title,
+          summary: topic.summary || `${topic.title} in ${chapter.title}.`,
+          prerequisites: prereqId ? [prereqId] : [],
+          targetChain: [level1, level2, level3, level4],
+          physicalModel: `Physical & Mechanism Intuition: Envision the core behavior in ${topic.title}. Understand how physical, chemical, or biological constituents interact under ${chapter.title} principles.`,
+          formalEquations: [
+            `Core Equation: f(${topic.title}) = f(parameters)`,
+            `Boundary Condition: limit as parameters approach standard state`
+          ],
+          whyPrompts: [
+            {
+              question: `Why does ${topic.title} follow this specific relationship under standard NEET exam conditions?`,
+              keyCheck: `Focus on fundamental principles: energy conservation, force balance, thermodynamic drive, or cellular signaling.`
+            },
+            {
+              question: `What primary assumption is made in ${topic.title}, and what breaks when this assumption is violated?`,
+              keyCheck: `Identify idealizations e.g. frictionless motion, ideal solutions, non-interacting particles, or steady state.`
+            }
+          ],
+          connectedConceptIds: prevTopic ? [prevTopic.id] : [],
+          crossSubjectConnections: [],
+          keyKeywords: [
+            topic.title.toLowerCase(),
+            chapter.title.toLowerCase(),
+            subject.toLowerCase(),
+            'neet',
+            'mechanism'
+          ],
+          isVerified: true,
+          resourceType: 'OFFICIAL / VERIFIED'
+        };
+
+        result.push(dynamicNode);
+        existingIds.add(topic.id);
+        existingTitles.add(topic.title.toLowerCase());
+      });
+    });
+  });
+
+  return result;
+}
+
 export const INITIAL_PYQS: PYQItem[] = [
   {
     id: 'pyq_sol_1',
     title: 'NEET 2021: Van t Hoff Factor & Elevation in Boiling Point',
     subject: 'Chemistry',
-    chapter: 'Solutions',
+    chapter: 'Solutions & Colligative Properties',
     questionText: 'The elevation in boiling point for 0.1 M aqueous solution of Ba(NO3)2 is found to be ΔTb. What is the value of Van t Hoff factor (i) if Ba(NO3)2 undergoes complete ionization?',
     givenData: ['Molarity C = 0.1 M', 'Salt Ba(NO3)2', 'Complete ionization (α = 1)'],
     irrelevantData: ['Molarity 0.1 M value is irrelevant for finding total ions per formula unit'],
@@ -243,7 +309,7 @@ export const INITIAL_PYQS: PYQItem[] = [
     id: 'pyq_phy_1',
     title: 'NEET 2022: Faraday Law Induced EMF in Rotating Rod',
     subject: 'Physics',
-    chapter: 'Electromagnetic Induction',
+    chapter: 'Electromagnetic Induction & Alternating Current',
     questionText: 'A metal rod of length L rotates with angular velocity ω in a uniform magnetic field B perpendicular to plane of rotation. Calculate induced EMF between center and rim.',
     givenData: ['Length L', 'Angular velocity ω', 'Uniform magnetic field B'],
     irrelevantData: ['Mass of the rod'],

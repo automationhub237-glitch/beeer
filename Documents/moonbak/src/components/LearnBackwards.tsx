@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useOS } from '../context/OSContext';
 import type { ConceptNode } from '../types/neetOS';
-import { GitCommit, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
+import { GitCommit, CheckCircle2, AlertTriangle, Layers, Filter } from 'lucide-react';
 
 interface LearnBackwardsProps {
   onSelectConcept?: (conceptId: string) => void;
@@ -9,17 +9,37 @@ interface LearnBackwardsProps {
 }
 
 export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngine }) => {
-  const { concepts } = useOS();
+  const { concepts, syllabus } = useOS();
+
+  const [selectedSubject, setSelectedSubject] = useState<string>('All');
+  const [selectedChapter, setSelectedChapter] = useState<string>('All');
   const [selectedTargetId, setSelectedTargetId] = useState<string>(concepts[0]?.id || 'colligative_properties');
   const [currentLevelIndex, setCurrentLevelIndex] = useState<number>(0);
   const [bottleneckConcept, setBottleneckConcept] = useState<ConceptNode | null>(null);
   const [userUnderstandingNote, setUserUnderstandingNote] = useState<string>('');
   const [testResult, setTestResult] = useState<'passed' | 'failed' | null>(null);
 
-  const targetConcept = concepts.find(c => c.id === selectedTargetId) || concepts[0];
-  
+  // Filter concepts based on subject and chapter
+  const filteredConcepts = concepts.filter(c => {
+    if (selectedSubject !== 'All' && c.subject !== selectedSubject) return false;
+    if (selectedChapter !== 'All' && c.chapter !== selectedChapter) return false;
+    return true;
+  });
+
+  const targetConcept = concepts.find(c => c.id === selectedTargetId) || filteredConcepts[0] || concepts[0];
+
   // Reconstruct chain backwards from target to foundational prerequisites
   const getPrerequisiteChain = (concept: ConceptNode): ConceptNode[] => {
+    if (concept.targetChain && concept.targetChain.length > 0) {
+      // Build level nodes from targetChain strings
+      return concept.targetChain.map((levelTitle, idx) => ({
+        ...concept,
+        id: `${concept.id}_level_${idx}`,
+        title: levelTitle,
+        summary: `Level ${idx + 1} prerequisite in the recursive learning chain for ${concept.title}.`
+      })).reverse();
+    }
+
     const chain: ConceptNode[] = [concept];
     let curr = concept;
     while (curr.prerequisites && curr.prerequisites.length > 0) {
@@ -68,17 +88,59 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
             <Layers className="w-3.5 h-3.5" />
-            1. LEARN BACKWARDS ENGINE
+            1. REVERSE KNOWLEDGE / BACKWARDS LEARNING ENGINE
           </div>
-          <h2 className="text-2xl font-bold text-white">Reverse Knowledge Graph Traversal</h2>
+          <h2 className="text-2xl font-bold text-white">Full Syllabus Backward Traversal</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Do not passively consume. Target the end goal, diagnose missing foundations, and rebuild backwards.
+            Target any exam-level concept across the Master Syllabus and recursively work backwards to fundamental principles.
           </p>
         </div>
+      </div>
 
-        {/* Target Concept Picker */}
-        <div className="flex items-center gap-2">
-          <label className="text-xs font-medium text-slate-400">Target Concept:</label>
+      {/* Master Syllabus Filters & Concept Target Selector */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+        <div>
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
+            <Filter className="w-3 h-3 text-cyan-400" /> Subject
+          </label>
+          <select
+            value={selectedSubject}
+            onChange={(e) => {
+              setSelectedSubject(e.target.value);
+              setSelectedChapter('All');
+              setCurrentLevelIndex(0);
+            }}
+            className="w-full bg-slate-900 border border-slate-800 text-xs text-white rounded-lg p-2.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+          >
+            <option value="All">All Subjects</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Biology">Biology</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Chapter</label>
+          <select
+            value={selectedChapter}
+            onChange={(e) => {
+              setSelectedChapter(e.target.value);
+              setCurrentLevelIndex(0);
+            }}
+            className="w-full bg-slate-900 border border-slate-800 text-xs text-white rounded-lg p-2.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+          >
+            <option value="All">All Chapters</option>
+            {syllabus
+              .filter(s => selectedSubject === 'All' || s.subject === selectedSubject)
+              .flatMap(s => s.chapters)
+              .map(ch => (
+                <option key={ch.id} value={ch.title}>{ch.title}</option>
+              ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Target Concept</label>
           <select
             value={selectedTargetId}
             onChange={(e) => {
@@ -87,9 +149,9 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
               setBottleneckConcept(null);
               setTestResult(null);
             }}
-            className="bg-slate-800 border border-slate-700 text-cyan-300 text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+            className="w-full bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-semibold rounded-lg p-2.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
           >
-            {concepts.map(c => (
+            {filteredConcepts.map(c => (
               <option key={c.id} value={c.id}>
                 [{c.subject}] {c.title}
               </option>
@@ -101,7 +163,7 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
       {/* Concept Reverse Chain Graph Visualizer */}
       <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
         <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-          Knowledge Ladder (Foundation → Target Goal)
+          Reverse Knowledge Chain (Fundamental Concept → Target Exam Concept)
         </h3>
         
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 overflow-x-auto py-2">
@@ -111,7 +173,7 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
             const isTargetNode = idx === ascendingChain.length - 1;
 
             return (
-              <React.Fragment key={node.id}>
+              <React.Fragment key={node.id + '_' + idx}>
                 <div
                   onClick={() => {
                     setCurrentLevelIndex(idx);
@@ -130,12 +192,12 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
                     {isPassed && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
                     {isTargetNode && <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded">TARGET</span>}
                   </div>
-                  <div className="font-semibold text-sm truncate">{node.title}</div>
-                  <div className="text-[11px] text-slate-400 mt-1 truncate">{node.chapter}</div>
+                  <div className="font-semibold text-xs leading-snug line-clamp-2">{node.title}</div>
+                  <div className="text-[10px] text-slate-400 mt-1 truncate">{node.chapter}</div>
                 </div>
 
                 {idx < ascendingChain.length - 1 && (
-                  <div className="hidden md:flex items-center text-slate-600">
+                  <div className="hidden md:flex items-center text-slate-600 shrink-0">
                     <GitCommit className="w-4 h-4 rotate-90 md:rotate-0" />
                   </div>
                 )}
@@ -164,7 +226,7 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
             <span className="text-xs text-cyan-400 font-semibold uppercase">Active Evaluation Level {currentLevelIndex + 1} of {ascendingChain.length}</span>
-            <h3 className="text-xl font-bold text-white mt-0.5">{activeLevelConcept.title}</h3>
+            <h3 className="text-lg font-bold text-white mt-0.5">{activeLevelConcept.title}</h3>
           </div>
           <span className="text-xs px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 rounded-md font-mono">
             {activeLevelConcept.subject}
@@ -185,7 +247,7 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
             Active Retrieval & Explanation Check
           </h4>
           <p className="text-sm font-medium text-cyan-200">
-            {activeLevelConcept.whyPrompts[0]?.question || "Explain the core mechanism without looking at formulas."}
+            {activeLevelConcept.whyPrompts?.[0]?.question || `Explain the core mechanism of ${activeLevelConcept.title} without relying on formulas.`}
           </p>
           <textarea
             value={userUnderstandingNote}
@@ -226,7 +288,7 @@ export const LearnBackwards: React.FC<LearnBackwardsProps> = ({ onLaunchWhyEngin
         <span>Target Goal: <strong className="text-slate-200">{targetConcept.title}</strong></span>
         {onLaunchWhyEngine && (
           <button
-            onClick={() => onLaunchWhyEngine(activeLevelConcept.id)}
+            onClick={() => onLaunchWhyEngine(targetConcept.id)}
             className="text-cyan-400 hover:underline flex items-center gap-1 font-medium"
           >
             Launch "Why Is This True?" Engine →

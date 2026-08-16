@@ -8,14 +8,34 @@ import type {
 export const chemistryTree: SyllabusSubjectTree = {
   subject: 'Chemistry',
   chapters: [
+    // Physical Chemistry
     {
       id: 'chem_ch1',
       title: 'Some Basic Concepts of Chemistry',
       classLevel: '11',
       category: 'Physical',
       topics: [
-        { id: 'chem_stoichiometry', title: 'Mole Concept & Stoichiometry', summary: 'Molar mass, empirical and molecular formula, limiting reagent calculations.' },
-        { id: 'chem_concentration', title: 'Concentration Terms', summary: 'Molarity, Molality, Mole fraction, Normality, ppm.' }
+        {
+          id: 'chem_stoichiometry',
+          title: 'Mole Concept & Stoichiometry',
+          summary: 'Molar mass, empirical and molecular formula, limiting reagent calculations.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_mole_def', title: 'Mole Definition, Avogadro Constant & Molar Mass', status: 'AVAILABLE' },
+            { id: 'chem_sub_empirical', title: 'Empirical & Molecular Formula Determination', status: 'AVAILABLE' },
+            { id: 'chem_sub_limiting_reagent', title: 'Stoichiometric Calculations & Limiting Reagent', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_concentration',
+          title: 'Concentration Terms',
+          summary: 'Molarity, Molality, Mole fraction, Normality, ppm.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_molarity_molality', title: 'Molarity (M) vs Molality (m) Temperature Dependence', status: 'AVAILABLE' },
+            { id: 'chem_sub_mole_fraction', title: 'Mole Fraction & Normality Calculations', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -24,8 +44,26 @@ export const chemistryTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'Physical',
       topics: [
-        { id: 'chem_atomic_models', title: 'Bohr Model & Quantum Mechanical Model', summary: 'Bohr radii and energy, de Broglie relation, Heisenberg uncertainty principle.' },
-        { id: 'chem_quantum_numbers', title: 'Quantum Numbers & Electronic Configuration', summary: 'Principal, azimuthal, magnetic, spin quantum numbers, Aufbau, Hund, Pauli rules.' }
+        {
+          id: 'chem_atomic_models',
+          title: 'Bohr Model & Quantum Mechanical Model',
+          summary: 'Bohr radii and energy, de Broglie relation, Heisenberg uncertainty principle.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_bohr_postulates', title: 'Bohr Postulates, Radius & Energy Expressions', status: 'AVAILABLE' },
+            { id: 'chem_sub_debroglie_heisenberg', title: 'de Broglie Wavelength & Heisenberg Uncertainty Principle', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_quantum_numbers',
+          title: 'Quantum Numbers & Electronic Configuration',
+          summary: 'Principal, azimuthal, magnetic, spin quantum numbers, Aufbau, Hund, Pauli rules.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_quantum_nos', title: 'Principal, Azimuthal, Magnetic & Spin Quantum Numbers', status: 'AVAILABLE' },
+            { id: 'chem_sub_aufbau_rules', title: 'Aufbau Principle, Hund Rule & Pauli Exclusion Principle', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -34,7 +72,17 @@ export const chemistryTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'Inorganic',
       topics: [
-        { id: 'chem_periodic_trends', title: 'Periodic Trends in Atomic Properties', summary: 'Atomic radius, ionization enthalpy, electron gain enthalpy, electronegativity.' }
+        {
+          id: 'chem_periodic_trends',
+          title: 'Periodic Trends in Atomic Properties',
+          summary: 'Atomic radius, ionization enthalpy, electron gain enthalpy, electronegativity.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_atomic_radii', title: 'Atomic, Ionic & Isoelectronic Radii Trends', status: 'AVAILABLE' },
+            { id: 'chem_sub_ionization_enthalpy', title: 'Ionization Enthalpy Anomalies (Be/B, N/O)', status: 'AVAILABLE' },
+            { id: 'chem_sub_electron_gain', title: 'Electron Gain Enthalpy (F vs Cl Exception)', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -43,8 +91,26 @@ export const chemistryTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'Inorganic',
       topics: [
-        { id: 'chem_vsepr_hyb', title: 'VSEPR Theory & Hybridization', summary: 'Molecular geometry prediction, sp, sp2, sp3, sp3d hybridization, bond angles.' },
-        { id: 'chem_mot', title: 'Molecular Orbital Theory & Dipole Moment', summary: 'Bond order, magnetic nature of homonuclear diatomic molecules, dipole moment.' }
+        {
+          id: 'chem_vsepr_hyb',
+          title: 'VSEPR Theory & Hybridization',
+          summary: 'Molecular geometry prediction, sp, sp2, sp3, sp3d hybridization, bond angles.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_vsepr_shapes', title: 'VSEPR Geometry & Lone Pair Distortions', status: 'AVAILABLE' },
+            { id: 'chem_sub_hybridization', title: 'Hybridization Types sp, sp2, sp3, sp3d, sp3d2', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_mot',
+          title: 'Molecular Orbital Theory & Dipole Moment',
+          summary: 'Bond order, magnetic nature of homonuclear diatomic molecules, dipole moment.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_mot_diagrams', title: 'MO Energy Level Diagrams (N2 vs O2 configuration)', status: 'AVAILABLE' },
+            { id: 'chem_sub_bond_order', title: 'Bond Order Calculation & Magnetic Nature Prediction', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -53,8 +119,26 @@ export const chemistryTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'Physical',
       topics: [
-        { id: 'chem_first_law_thermo', title: 'Enthalpy & First Law Calculations', summary: 'Internal energy change, work in reversible/irreversible expansion, Hess law.' },
-        { id: 'chem_spontaneity', title: 'Entropy & Gibbs Free Energy', summary: 'Second and third laws, spontaneity criteria ΔG = ΔH - TΔS, equilibrium constant relation.' }
+        {
+          id: 'chem_first_law_thermo',
+          title: 'Enthalpy & First Law Calculations',
+          summary: 'Internal energy change, work in reversible/irreversible expansion, Hess law.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_first_law_eq', title: 'First Law ΔU = q + w & PV Work Formulae', status: 'AVAILABLE' },
+            { id: 'chem_sub_hess_law', title: 'Hess Law of Constant Heat Summation & Bond Enthalpy', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_spontaneity',
+          title: 'Entropy & Gibbs Free Energy',
+          summary: 'Second and third laws, spontaneity criteria ΔG = ΔH - TΔS, equilibrium constant relation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_entropy_second_law', title: 'Entropy Change ΔS System & Surroundings', status: 'AVAILABLE' },
+            { id: 'chem_sub_gibbs_spontaneity', title: 'Gibbs Free Energy ΔG = ΔH - TΔS & Equilibrium ΔG° = -RT ln K', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -63,95 +147,264 @@ export const chemistryTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'Physical',
       topics: [
-        { id: 'chem_chemical_eq', title: 'Chemical Equilibrium & Le Chatelier Principle', summary: 'Kc and Kp relationship, factors affecting equilibrium position.' },
-        { id: 'chem_ionic_eq', title: 'Ionic Equilibrium, pH & Buffer Solutions', summary: 'Ostwald dilution law, pH calculations, buffer action, solubility product Ksp.' }
+        {
+          id: 'chem_chemical_eq',
+          title: 'Chemical Equilibrium & Le Chatelier Principle',
+          summary: 'Kc and Kp relationship, factors affecting equilibrium position.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_kp_kc_relation', title: 'Kp = Kc (RT)^(Δng) Relationship', status: 'AVAILABLE' },
+            { id: 'chem_sub_le_chatelier', title: 'Le Chatelier Principle (Temp, Pressure, Concentration effects)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_ionic_eq',
+          title: 'Ionic Equilibrium, pH & Buffer Solutions',
+          summary: 'Ostwald dilution law, pH calculations, buffer action, solubility product Ksp.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_ph_calculations', title: 'pH & pOH Calculations for Acids and Bases', status: 'AVAILABLE' },
+            { id: 'chem_sub_buffer_henderson', title: 'Henderson-Hasselbalch Equation for Acidic/Basic Buffers', status: 'AVAILABLE' },
+            { id: 'chem_sub_ksp_solubility', title: 'Solubility Product Ksp & Common Ion Effect', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch7',
-      title: 'Solutions & Colligative Properties',
-      classLevel: '12',
-      category: 'Physical',
+      title: 'Redox Reactions & Hydrogen / s-Block',
+      classLevel: '11',
+      category: 'Inorganic',
       topics: [
-        { id: 'chem_raoult_colligative', title: 'Raoult Law & Colligative Properties', summary: 'Ideal and non-ideal solutions, vapour pressure lowering, elevation in BP, depression in FP, Osmotic pressure.' },
-        { id: 'chem_van_t_hoff', title: 'Van t Hoff Factor & Abnormal Molar Mass', summary: 'Dissociation and association factor i, corrected colligative equations.' }
+        {
+          id: 'chem_redox_reactions',
+          title: 'Redox Reactions & Oxidation Numbers',
+          summary: 'Balancing redox reactions via ion-electron method, oxidation states.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_oxidation_no', title: 'Oxidation Number Assignment Rules & Exceptions', status: 'AVAILABLE' },
+            { id: 'chem_sub_balancing_redox', title: 'Ion-Electron Method in Acidic & Basic Media', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch8',
-      title: 'Electrochemistry',
+      title: 'Solutions & Colligative Properties',
       classLevel: '12',
       category: 'Physical',
       topics: [
-        { id: 'chem_nernst_galvanic', title: 'Galvanic Cells & Nernst Equation', summary: 'Standard electrode potential, Nernst equation for cell EMF, Gibbs energy and EMF.' },
-        { id: 'chem_conductance_faraday', title: 'Conductance & Faraday Laws of Electrolysis', summary: 'Molar conductivity, Kohlrausch law, Faraday first and second laws of electrolysis.' }
+        {
+          id: 'chem_raoult_colligative',
+          title: 'Raoult Law & Colligative Properties',
+          summary: 'Ideal and non-ideal solutions, vapour pressure lowering, elevation in BP, depression in FP, Osmotic pressure.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_raoult_ideal', title: 'Raoult Law & Positive/Negative Deviations', status: 'AVAILABLE' },
+            { id: 'chem_sub_colligative_eqs', title: 'Boiling Elevation, Freezing Depression & Osmotic Pressure Equations', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_van_t_hoff',
+          title: 'Van t Hoff Factor & Abnormal Molar Mass',
+          summary: 'Dissociation and association factor i, corrected colligative equations.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_vant_hoff_i', title: 'Van t Hoff Factor i = 1 + (n - 1)α Formula', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch9',
-      title: 'Chemical Kinetics',
+      title: 'Electrochemistry',
       classLevel: '12',
       category: 'Physical',
       topics: [
-        { id: 'chem_rate_order', title: 'Rate Laws, Zero & First Order Kinetics', summary: 'Integrated rate equations, half-life formula t1/2, pseudo first order reactions.' },
-        { id: 'chem_arrhenius', title: 'Arrhenius Equation & Activation Energy', summary: 'Temperature dependence of reaction rate, Ea determination, collision theory.' }
+        {
+          id: 'chem_nernst_galvanic',
+          title: 'Galvanic Cells & Nernst Equation',
+          summary: 'Standard electrode potential, Nernst equation for cell EMF, Gibbs energy and EMF.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_standard_potential', title: 'Electrochemical Series & Standard Electrode Potential E°', status: 'AVAILABLE' },
+            { id: 'chem_sub_nernst_equation', title: 'Nernst Equation E_cell = E° - (0.0591/n) log Q', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_conductance_faraday',
+          title: 'Conductance & Faraday Laws of Electrolysis',
+          summary: 'Molar conductivity, Kohlrausch law, Faraday first and second laws of electrolysis.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_kohlrausch_law', title: 'Kohlrausch Law of Independent Migration of Ions', status: 'AVAILABLE' },
+            { id: 'chem_sub_faraday_laws', title: 'Faraday First & Second Laws of Electrolysis w = Z I t', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch10',
-      title: 'Organic Chemistry: Basic Principles & GOC',
-      classLevel: '11',
-      category: 'Organic',
+      title: 'Chemical Kinetics',
+      classLevel: '12',
+      category: 'Physical',
       topics: [
-        { id: 'chem_electronic_effects', title: 'Inductive, Resonance & Hyperconjugation Effects', summary: 'Electron displacement effects, carbocation/carbanion/free radical stability.' },
-        { id: 'chem_stereochemistry', title: 'Isomerism & Stereochemistry', summary: 'Structural isomerism, optical activity, chirality, R/S and E/Z configurations, enantiomers.' }
+        {
+          id: 'chem_rate_order',
+          title: 'Rate Laws, Zero & First Order Kinetics',
+          summary: 'Integrated rate equations, half-life formula t1/2, pseudo first order reactions.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_integrated_rate', title: 'Zero Order vs First Order Integrated Rate Expressions', status: 'AVAILABLE' },
+            { id: 'chem_sub_half_life', title: 'Half-Life Formulas t1/2 = 0.693 / k for First Order', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_arrhenius',
+          title: 'Arrhenius Equation & Activation Energy',
+          summary: 'Temperature dependence of reaction rate, Ea determination, collision theory.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_arrhenius_eq', title: 'Arrhenius Equation k = A e^(-Ea/RT) & Logarithmic Form', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch11',
-      title: 'Hydrocarbons',
+      title: 'Organic Chemistry: Basic Principles & GOC',
       classLevel: '11',
       category: 'Organic',
       topics: [
-        { id: 'chem_alkanes_alkenes', title: 'Alkanes, Alkenes & Markovnikov Rule', summary: 'Preparation methods, electrophilic addition, Markovnikov vs anti-Markovnikov addition.' },
-        { id: 'chem_aromatic_substitution', title: 'Aromatic Hydrocarbons & Electrophilic Substitution', summary: 'Huckel 4n+2 rule, nitration, halogenation, sulfonation, Friedel-Crafts alkylation/acylation.' }
+        {
+          id: 'chem_electronic_effects',
+          title: 'Inductive, Resonance & Hyperconjugation Effects',
+          summary: 'Electron displacement effects, carbocation/carbanion/free radical stability.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_goc_effects', title: '+I/-I, +R/-R, and Hyperconjugation Stability Order', status: 'AVAILABLE' },
+            { id: 'chem_sub_intermediate_stability', title: 'Carbocation, Carbanion & Radical Stability Rules', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_stereochemistry',
+          title: 'Isomerism & Stereochemistry',
+          summary: 'Structural isomerism, optical activity, chirality, R/S and E/Z configurations, enantiomers.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_chirality_optical', title: 'Chirality, Optical Activity, Enantiomers & Diastereomers', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch12',
-      title: 'Haloalkanes & Haloarenes',
-      classLevel: '12',
+      title: 'Hydrocarbons',
+      classLevel: '11',
       category: 'Organic',
       topics: [
-        { id: 'chem_sn1_sn2', title: 'SN1 vs SN2 Nucleophilic Substitution Mechanisms', summary: 'OpenStax visual flow: stereochemical inversion (SN2) vs racemization (SN1), solvent effect.' }
+        {
+          id: 'chem_alkanes_alkenes',
+          title: 'Alkanes, Alkenes & Markovnikov Rule',
+          summary: 'Preparation methods, electrophilic addition, Markovnikov vs anti-Markovnikov addition.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_markovnikov', title: 'Markovnikov vs Anti-Markovnikov (Kharasch Peroxide) Addition', status: 'AVAILABLE' },
+            { id: 'chem_sub_ozonolysis', title: 'Ozonolysis of Alkenes Structure Identification', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_aromatic_substitution',
+          title: 'Aromatic Hydrocarbons & Electrophilic Substitution',
+          summary: 'Huckel 4n+2 rule, nitration, halogenation, sulfonation, Friedel-Crafts alkylation/acylation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_huckel_rule', title: 'Huckel (4n+2) π Electron Aromaticity Rule', status: 'AVAILABLE' },
+            { id: 'chem_sub_electrophilic_aromatic', title: 'Nitration, Halogenation & Friedel-Crafts Reactions of Benzene', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch13',
-      title: 'Alcohols, Phenols & Ethers',
+      title: 'Haloalkanes & Haloarenes',
       classLevel: '12',
       category: 'Organic',
       topics: [
-        { id: 'chem_alcohols_phenols', title: 'Acidity, Reimer-Tiemann & Kolbe Reactions', summary: 'Lucas test, acidic character of phenols, Williamson synthesis of ethers.' }
+        {
+          id: 'chem_sn1_sn2',
+          title: 'SN1 vs SN2 Nucleophilic Substitution Mechanisms',
+          summary: 'OpenStax visual flow: stereochemical inversion (SN2) vs racemization (SN1), solvent effect.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_sn2_mechanism', title: 'SN2 1-Step Backside Attack & Walden Inversion', status: 'AVAILABLE' },
+            { id: 'chem_sub_sn1_mechanism', title: 'SN1 2-Step Carbocation Intermediate & Racemization', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch14',
-      title: 'Aldehydes, Ketones & Carboxylic Acids',
+      title: 'Alcohols, Phenols & Ethers',
       classLevel: '12',
       category: 'Organic',
       topics: [
-        { id: 'chem_nucleophilic_addition', title: 'Nucleophilic Addition, Aldol & Cannizzaro Reactions', summary: 'Tollens and Fehling tests, Aldol condensation mechanism, Cannizzaro disproportionation.' }
+        {
+          id: 'chem_alcohols_phenols',
+          title: 'Acidity, Reimer-Tiemann & Kolbe Reactions',
+          summary: 'Lucas test, acidic character of phenols, Williamson synthesis of ethers.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_lucas_test', title: 'Lucas Reagent Test for 1°, 2°, 3° Alcohols', status: 'AVAILABLE' },
+            { id: 'chem_sub_reimer_tiemann', title: 'Reimer-Tiemann & Kolbe Reaction Mechanisms', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'chem_ch15',
-      title: 'Amines & Coordination Compounds',
+      title: 'Aldehydes, Ketones & Carboxylic Acids',
+      classLevel: '12',
+      category: 'Organic',
+      topics: [
+        {
+          id: 'chem_nucleophilic_addition',
+          title: 'Nucleophilic Addition, Aldol & Cannizzaro Reactions',
+          summary: 'Tollens and Fehling tests, Aldol condensation mechanism, Cannizzaro disproportionation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_tollens_fehling', title: 'Tollens Silver Mirror & Fehling Tests', status: 'AVAILABLE' },
+            { id: 'chem_sub_aldol_cannizzaro', title: 'Aldol Condensation vs Cannizzaro Disproportionation', status: 'AVAILABLE' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'chem_ch16',
+      title: 'Amines, Biomolecules & Coordination Compounds',
       classLevel: '12',
       category: 'Inorganic',
       topics: [
-        { id: 'chem_amines_basicity', title: 'Basicity of Amines & Diazonium Salts', summary: 'Hinsberg test, basicity order in aqueous solution, diazonium coupling reactions.' },
-        { id: 'chem_coordination_cft', title: 'Coordination Compounds, Isomerism & CFT', summary: 'IUPAC nomenclature, Werner theory, Crystal Field Theory d-orbital splitting, magnetic moments.' }
+        {
+          id: 'chem_amines_basicity',
+          title: 'Basicity of Amines & Diazonium Salts',
+          summary: 'Hinsberg test, basicity order in aqueous solution, diazonium coupling reactions.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_amine_basicity_order', title: 'Basicity Order of Amines in Aqueous vs Gas Phase', status: 'AVAILABLE' },
+            { id: 'chem_sub_hinsberg_test', title: 'Hinsberg Reagent Test (Benzenesulfonyl chloride)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'chem_coordination_cft',
+          title: 'Coordination Compounds, Isomerism & CFT',
+          summary: 'IUPAC nomenclature, Werner theory, Crystal Field Theory d-orbital splitting, magnetic moments.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'chem_sub_coordination_iupac', title: 'IUPAC Nomenclature & Werner Coordination Theory', status: 'AVAILABLE' },
+            { id: 'chem_sub_cft_splitting', title: 'Crystal Field Theory Octahedral Δo vs Tetrahedral Δt Splitting', status: 'AVAILABLE' }
+          ]
+        }
       ]
     }
   ]
@@ -356,7 +609,7 @@ export const chemistryQuestions: GraduatedQuestionItem[] = [
     category: 'PREDICTED_PYQ',
     ncertPageRef: 'NCERT Class 12 Chemistry Vol 1, Page 250',
     subject: 'Chemistry',
-    chapter: 'Amines & Coordination Compounds',
+    chapter: 'Amines, Biomolecules & Coordination Compounds',
     topic: 'Coordination Compounds, Isomerism & CFT',
     difficulty: '50+',
     questionType: 'MCQ',
@@ -385,7 +638,7 @@ export const chemistryQuestions: GraduatedQuestionItem[] = [
     pyqYear: 'NEET 2023',
     ncertPageRef: 'NCERT Class 12 Chemistry Vol 1, Page 222',
     subject: 'Chemistry',
-    chapter: 'Amines & Coordination Compounds',
+    chapter: 'Amines, Biomolecules & Coordination Compounds',
     topic: 'Coordination Compounds, Isomerism & CFT',
     difficulty: '20-50',
     questionType: 'MCQ',
@@ -443,7 +696,7 @@ export const chemistryTopicResources: TopicResourceData[] = [
       tier1DetailedNCERT: 'NCERT Mechanism: SN2 follows second order kinetics, Rate = k [CH3Cl] [OH-]. It occurs through a single transition state where C-Cl bond breaks simultaneously as C-OH bond forms. SN1 follows first order kinetics, Rate = k [(CH3)3C-Br]. Step 1 (slow, RDS): heterolytic cleavage of C-Br yields planar carbocation. Step 2 (fast): nucleophile attacks planar carbocation from either face.',
       tier2HighYieldShort: '• Solvents: Polar Aprotic (DMSO, DMF, Acetone) favor SN2. Polar Protic (H2O, EtOH) favor SN1.\n• Nucleophiles: Strong anionic nucleophiles (CN-, I-, HO-) favor SN2. Weak neutral nucleophiles (H2O, ROH) favor SN1.\n• Stereochemistry: SN2 = Inversion of configuration. SN1 = Racemization (50% retention + 50% inversion).',
       tier3ConceptualVisualMechanisms: 'OpenStax Organic Mechanism Flow:\n[SN2]: Nu:⁻ + C-X ➔ [Nu---C---X]‡ (Trigonal bipyramidal transition state with sp2 hybrid carbon) ➔ Nu-C + :X⁻ (Inverted stereocenter).\n[SN1]: R3C-X ➔ [R3C⁺] (Planar sp2 carbocation intermediate, 120° bond angles) ➔ Top/Bottom attack ➔ Racemic R3C-Nu.',
-      tier4TopperTricksShortcuts: 'SATHEE Elimination Trick: Allylic and Benzylic halides undergo rapid SN1 AND SN2 reactions! Do not rule them out for either pathway.'
+      tier4TopperTricksShortcuts: 'Elimination Trick: Allylic and Benzylic halides undergo rapid SN1 AND SN2 reactions! Do not rule them out for either pathway.'
     },
     formulaBank: [
       'Rate_SN2 = k * [Substrate] * [Nucleophile]',
