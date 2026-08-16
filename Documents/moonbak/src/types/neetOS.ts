@@ -90,12 +90,25 @@ export interface PYQItem {
   integrityLabel: 'OFFICIAL / VERIFIED' | 'USER IMPORTED' | 'EXTERNAL RESOURCE' | 'AI GENERATED';
 }
 
+export interface SolverAlgorithm {
+  textbookMethod: string;
+  topperFastTrack: string;
+  commonTrapWarning: string;
+}
+
 export interface GraduatedQuestionItem {
   id: string;
   questionText: string;
   options: string[];
   correctOptionIndex: number;
   explanation: string;
+  solverAlgorithm?: SolverAlgorithm;
+  topperTrick?: string;
+  commonTrap?: string;
+  difficultyScore?: number; // 0-100
+  category?: 'EASY' | 'MEDIUM' | 'CYQ' | 'PREDICTED_PYQ' | 'ACTUAL_PYQ';
+  pyqYear?: string | number;
+  ncertPageRef?: string;
   subject: Subject;
   chapter: string;
   topic: string;
@@ -174,6 +187,13 @@ export interface FlashcardItem {
   answer: string;
 }
 
+export interface MultiTierNotes {
+  tier1DetailedNCERT: string;
+  tier2HighYieldShort: string;
+  tier3ConceptualVisualMechanisms: string;
+  tier4TopperTricksShortcuts: string;
+}
+
 export interface TopicResourceData {
   topicId: string;
   topicTitle: string;
@@ -181,6 +201,7 @@ export interface TopicResourceData {
   subject: Subject;
   detailedNotes?: string;
   shortNotes?: string;
+  multiTierNotes?: MultiTierNotes;
   formulaBank?: string[];
   ncertFacts?: string[];
   commonMistakes?: string[];
