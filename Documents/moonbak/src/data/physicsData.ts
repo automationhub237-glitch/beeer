@@ -14,8 +14,27 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_units_dims', title: 'Units, Dimensions & Error Analysis', summary: 'SI base units, dimensional formulae, principle of homogeneity, error propagation.' },
-        { id: 'phy_instruments', title: 'Measuring Instruments (Vernier & Screw Gauge)', summary: 'Least count, zero error correction, vernier calipers, screw gauge.' }
+        {
+          id: 'phy_units_dims',
+          title: 'Units, Dimensions & Error Analysis',
+          summary: 'SI base units, dimensional formulae, principle of homogeneity, error propagation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_si_units', title: 'SI Fundamental & Derived Units', status: 'AVAILABLE' },
+            { id: 'phy_sub_dimensions', title: 'Dimensional Formulae & Homogeneity Principle', status: 'AVAILABLE' },
+            { id: 'phy_sub_errors', title: 'Absolute, Relative & Percentage Errors in Measurements', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_instruments',
+          title: 'Measuring Instruments (Vernier & Screw Gauge)',
+          summary: 'Least count, zero error correction, vernier calipers, screw gauge.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_vernier', title: 'Vernier Calipers & Least Count Calculation', status: 'AVAILABLE' },
+            { id: 'phy_sub_screwgauge', title: 'Screw Gauge Pitch & Zero Error Correction', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -24,9 +43,37 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_1d_motion', title: 'Motion in a Straight Line', summary: 'Distance vs displacement, instantaneous velocity, uniform acceleration equations.' },
-        { id: 'phy_projectile', title: 'Projectile Motion', summary: 'Trajectory equation, time of flight, horizontal range, maximum height.' },
-        { id: 'phy_relative_motion', title: 'Relative Motion & Vectors', summary: 'Vector addition, dot and cross products, relative velocity in 2D.' }
+        {
+          id: 'phy_1d_motion',
+          title: 'Motion in a Straight Line',
+          summary: 'Distance vs displacement, instantaneous velocity, uniform acceleration equations.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_kinematic_eqs', title: 'Uniform Acceleration Kinematic Equations', status: 'AVAILABLE' },
+            { id: 'phy_sub_vt_graphs', title: 'Position-Time & Velocity-Time Graph Analysis', status: 'AVAILABLE' },
+            { id: 'phy_sub_freefall', title: 'Motion Under Gravity & Freefall Dynamics', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_projectile',
+          title: 'Projectile Motion',
+          summary: 'Trajectory equation, time of flight, horizontal range, maximum height.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_ground_proj', title: 'Ground-to-Ground Projectile Motion', status: 'AVAILABLE' },
+            { id: 'phy_sub_inclined_proj', title: 'Horizontal & Inclined Plane Projectiles', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_relative_motion',
+          title: 'Relative Motion & Vectors',
+          summary: 'Vector addition, dot and cross products, relative velocity in 2D.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_vector_algebra', title: 'Vector Algebra (Dot Product & Cross Product)', status: 'AVAILABLE' },
+            { id: 'phy_sub_rain_river', title: 'Relative Velocity, River-Swimmer & Rain-Man Problems', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -35,8 +82,26 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_newton_laws', title: 'Newton Laws & Free Body Diagrams', summary: 'Inertia, momentum, F=ma, action-reaction, tension and normal force.' },
-        { id: 'phy_friction', title: 'Friction & Circular Motion Dynamics', summary: 'Static vs kinetic friction, angle of repose, banking of roads, centripetal force.' }
+        {
+          id: 'phy_newton_laws',
+          title: 'Newton Laws & Free Body Diagrams',
+          summary: 'Inertia, momentum, F=ma, action-reaction, tension and normal force.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_fbd', title: 'Equilibrium & Free Body Diagram Analysis', status: 'AVAILABLE' },
+            { id: 'phy_sub_pulley_block', title: 'Connected Bodies & Pulley System Accelerations', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_friction',
+          title: 'Friction & Circular Motion Dynamics',
+          summary: 'Static vs kinetic friction, angle of repose, banking of roads, centripetal force.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_friction_types', title: 'Static, Kinetic & Rolling Friction Laws', status: 'AVAILABLE' },
+            { id: 'phy_sub_banking_road', title: 'Centripetal Force & Banking of Circular Roads', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -45,8 +110,26 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_work_energy_thm', title: 'Work-Energy Theorem & Conservative Forces', summary: 'Work done by variable force, potential energy, mechanical energy conservation.' },
-        { id: 'phy_collisions', title: 'Collisions & Power', summary: 'Elastic and inelastic collisions in 1D and 2D, coefficient of restitution, instantaneous power.' }
+        {
+          id: 'phy_work_energy_thm',
+          title: 'Work-Energy Theorem & Conservative Forces',
+          summary: 'Work done by variable force, potential energy, mechanical energy conservation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_work_done', title: 'Work Done by Constant & Variable Forces', status: 'AVAILABLE' },
+            { id: 'phy_sub_energy_cons', title: 'Conservative vs Non-Conservative Forces & Potential Energy Curves', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_collisions',
+          title: 'Collisions & Power',
+          summary: 'Elastic and inelastic collisions in 1D and 2D, coefficient of restitution, instantaneous power.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_collision_types', title: 'Elastic & Inelastic Collisions in 1D & 2D', status: 'AVAILABLE' },
+            { id: 'phy_sub_power_calc', title: 'Instantaneous & Average Power Calculations', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -55,8 +138,26 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_center_of_mass', title: 'Center of Mass & Linear Momentum', summary: 'COM calculation for discrete and continuous systems, conservation of momentum.' },
-        { id: 'phy_rotational_motion', title: 'Torque, Angular Momentum & Moment of Inertia', summary: 'Moment of inertia theorems, torque τ=Iα, angular momentum conservation, rolling motion.' }
+        {
+          id: 'phy_center_of_mass',
+          title: 'Center of Mass & Linear Momentum',
+          summary: 'COM calculation for discrete and continuous systems, conservation of momentum.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_com_calc', title: 'Center of Mass of Symmetric & Continuous Bodies', status: 'AVAILABLE' },
+            { id: 'phy_sub_com_motion', title: 'Motion & Conservation of Linear Momentum of COM', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_rotational_motion',
+          title: 'Torque, Angular Momentum & Moment of Inertia',
+          summary: 'Moment of inertia theorems, torque τ=Iα, angular momentum conservation, rolling motion.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_moi_theorems', title: 'Parallel & Perpendicular Axis Theorems of MOI', status: 'AVAILABLE' },
+            { id: 'phy_sub_angular_momentum', title: 'Torque, Angular Momentum Conservation & Pure Rolling', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -65,8 +166,26 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_kepler_laws', title: 'Kepler Laws & Universal Gravitation', summary: 'Newton law of gravitation, gravitational field intensity, Kepler laws of planetary motion.' },
-        { id: 'phy_grav_potential', title: 'Gravitational Potential Energy & Satellites', summary: 'Escape velocity, orbital velocity, geostationary satellites, variation of g with altitude/depth.' }
+        {
+          id: 'phy_kepler_laws',
+          title: 'Kepler Laws & Universal Gravitation',
+          summary: 'Newton law of gravitation, gravitational field intensity, Kepler laws of planetary motion.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_grav_law', title: 'Newton Law of Gravitation & Gravitational Field', status: 'AVAILABLE' },
+            { id: 'phy_sub_kepler', title: 'Kepler Laws of Planetary Motion', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_grav_potential',
+          title: 'Gravitational Potential Energy & Satellites',
+          summary: 'Escape velocity, orbital velocity, geostationary satellites, variation of g with altitude/depth.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_g_variation', title: 'Variation of g with Altitude, Depth & Rotation', status: 'AVAILABLE' },
+            { id: 'phy_sub_escape_orbital', title: 'Escape Velocity, Orbital Speed & Satellite Binding Energy', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -75,9 +194,37 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_elasticity', title: 'Elasticity & Hooke Law', summary: 'Young, Shear, and Bulk moduli, stress-strain curve, elastic potential energy.' },
-        { id: 'phy_fluid_statics_dynamics', title: 'Pascal Law, Bernoulli Theorem & Viscosity', summary: 'Pressure variation, buoyancy, continuity equation, Bernoulli theorem, Stokes law, terminal velocity.' },
-        { id: 'phy_surface_tension', title: 'Surface Tension & Capillarity', summary: 'Surface energy, excess pressure inside bubble/drop, capillary rise formula.' }
+        {
+          id: 'phy_elasticity',
+          title: 'Elasticity & Hooke Law',
+          summary: 'Young, Shear, and Bulk moduli, stress-strain curve, elastic potential energy.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_stress_strain', title: 'Stress-Strain Curve & Moduli of Elasticity', status: 'AVAILABLE' },
+            { id: 'phy_sub_elastic_energy', title: 'Elastic Potential Energy Stretched Wire Formula', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_fluid_statics_dynamics',
+          title: 'Pascal Law, Bernoulli Theorem & Viscosity',
+          summary: 'Pressure variation, buoyancy, continuity equation, Bernoulli theorem, Stokes law, terminal velocity.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_pascal_buoyancy', title: 'Pascal Law, Hydraulic Lift & Archimedes Buoyancy', status: 'AVAILABLE' },
+            { id: 'phy_sub_bernoulli', title: 'Continuity Equation & Bernoulli Principle Applications', status: 'AVAILABLE' },
+            { id: 'phy_sub_viscosity', title: 'Viscosity, Stokes Law & Terminal Velocity', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_surface_tension',
+          title: 'Surface Tension & Capillarity',
+          summary: 'Surface energy, excess pressure inside bubble/drop, capillary rise formula.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_surface_energy', title: 'Surface Energy & Work Done in Expanding Droplet', status: 'AVAILABLE' },
+            { id: 'phy_sub_capillary_rise', title: 'Excess Pressure in Bubble & Capillary Ascent Formula', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -86,9 +233,36 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_thermo_laws', title: 'Thermodynamic Laws & Processes', summary: 'Zeroth, First and Second laws, isothermal, adiabatic, isobaric, isochoric processes.' },
-        { id: 'phy_heat_engines', title: 'Heat Engines & Carnot Cycle', summary: 'Carnot engine efficiency, refrigerator COP, reversible/irreversible processes.' },
-        { id: 'phy_ktg', title: 'Kinetic Theory of Gases & Degrees of Freedom', summary: 'RMS velocity, law of equipartition of energy, molar heat capacities Cv and Cp.' }
+        {
+          id: 'phy_thermo_laws',
+          title: 'Thermodynamic Laws & Processes',
+          summary: 'Zeroth, First and Second laws, isothermal, adiabatic, isobaric, isochoric processes.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_first_law_thermo', title: 'First Law ΔQ = ΔU + ΔW & Process PV Work', status: 'AVAILABLE' },
+            { id: 'phy_sub_adiabatic_iso', title: 'Isothermal & Adiabatic Process Equations & Work Formulas', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_heat_engines',
+          title: 'Heat Engines & Carnot Cycle',
+          summary: 'Carnot engine efficiency, refrigerator COP, reversible/irreversible processes.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_carnot_cycle', title: 'Carnot Engine Efficiency η = 1 - T2/T1', status: 'AVAILABLE' },
+            { id: 'phy_sub_refrigerator_cop', title: 'Refrigerator Coefficient of Performance (COP)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_ktg',
+          title: 'Kinetic Theory of Gases & Degrees of Freedom',
+          summary: 'RMS velocity, law of equipartition of energy, molar heat capacities Cv and Cp.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_gas_velocities', title: 'RMS, Most Probable & Average Gas Velocities', status: 'AVAILABLE' },
+            { id: 'phy_sub_degrees_freedom', title: 'Degrees of Freedom & Molar Heat Capacities Cp/Cv Ratio', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -97,8 +271,27 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '11',
       category: 'General',
       topics: [
-        { id: 'phy_shm', title: 'Simple Harmonic Motion (SHM)', summary: 'Displacement, velocity, acceleration, simple pendulum, spring-mass system energy.' },
-        { id: 'phy_wave_motion', title: 'Wave Motion, Organ Pipes & Doppler Effect', summary: 'Transverse and longitudinal waves, standing waves in strings/pipes, Doppler effect.' }
+        {
+          id: 'phy_shm',
+          title: 'Simple Harmonic Motion (SHM)',
+          summary: 'Displacement, velocity, acceleration, simple pendulum, spring-mass system energy.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_shm_kinematics', title: 'SHM Kinematic Differential Equations x(t), v(t), a(t)', status: 'AVAILABLE' },
+            { id: 'phy_sub_pendulum_spring', title: 'Simple Pendulum & Spring System Time Periods', status: 'AVAILABLE' },
+            { id: 'phy_sub_shm_energy', title: 'Kinetic & Potential Energy Exchange in SHM', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_wave_motion',
+          title: 'Wave Motion, Organ Pipes & Doppler Effect',
+          summary: 'Transverse and longitudinal waves, standing waves in strings/pipes, Doppler effect.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_standing_waves', title: 'Standing Waves in Stretched Strings & Organ Pipes', status: 'AVAILABLE' },
+            { id: 'phy_sub_doppler_effect', title: 'Doppler Shift Frequency Formula in Sound', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -107,8 +300,26 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_coulomb_gauss', title: 'Coulomb Law & Gauss Theorem', summary: 'Electric field, flux, Gauss law applications for spheres, sheets, cylinders.' },
-        { id: 'phy_potential_cap', title: 'Electric Potential & Capacitance', summary: 'Potential energy, equipotential surfaces, parallel plate capacitor with dielectric.' }
+        {
+          id: 'phy_coulomb_gauss',
+          title: 'Coulomb Law & Gauss Theorem',
+          summary: 'Electric field, flux, Gauss law applications for spheres, sheets, cylinders.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_coulomb_law', title: 'Coulomb Law & Vector Electric Field Strength', status: 'AVAILABLE' },
+            { id: 'phy_sub_gauss_law', title: 'Gauss Law Flux & Electric Field of Symmetric Charge Distributions', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_potential_cap',
+          title: 'Electric Potential & Capacitance',
+          summary: 'Potential energy, equipotential surfaces, parallel plate capacitor with dielectric.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_electric_potential', title: 'Electric Potential & Potential Energy of Charge Systems', status: 'AVAILABLE' },
+            { id: 'phy_sub_capacitance_dielectric', title: 'Parallel Plate Capacitor with Dielectric Slabs & Combination Rules', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -117,8 +328,27 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_ohm_drift', title: 'Ohm Law, Drift Velocity & Resistance', summary: 'Drift velocity formula, mobility, temperature dependence of resistivity.' },
-        { id: 'phy_kirchhoff_bridges', title: 'Kirchhoff Laws, Wheatstone Bridge & Meter Bridge', summary: 'KCL, KVL, internal resistance, EMF, cells in series/parallel, potentiometer principle.' }
+        {
+          id: 'phy_ohm_drift',
+          title: 'Ohm Law, Drift Velocity & Resistance',
+          summary: 'Drift velocity formula, mobility, temperature dependence of resistivity.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_drift_velocity', title: 'Drift Velocity Microscopic Conduction Expression', status: 'AVAILABLE' },
+            { id: 'phy_sub_resistance_temp', title: 'Resistivity Temperature Dependence α Formula', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_kirchhoff_bridges',
+          title: 'Kirchhoff Laws, Wheatstone Bridge & Meter Bridge',
+          summary: 'KCL, KVL, internal resistance, EMF, cells in series/parallel, potentiometer principle.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_kirchhoff_rules', title: 'Kirchhoff Junction (KCL) & Loop (KVL) Rules', status: 'AVAILABLE' },
+            { id: 'phy_sub_wheatstone_meter', title: 'Balanced Wheatstone Bridge & Meter Bridge Experiment', status: 'AVAILABLE' },
+            { id: 'phy_sub_potentiometer', title: 'Potentiometer Cell Comparison & Internal Resistance Determination', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -127,8 +357,27 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_biot_savart', title: 'Biot-Savart & Ampere Circuital Law', summary: 'Magnetic field due to current-carrying wire, circular loop, solenoid, toroid.' },
-        { id: 'phy_lorentz_force', title: 'Lorentz Force, Cyclotron & Magnetic Dipole', summary: 'Force on moving charge, force between parallel wires, torque on magnetic dipole.' }
+        {
+          id: 'phy_biot_savart',
+          title: 'Biot-Savart & Ampere Circuital Law',
+          summary: 'Magnetic field due to current-carrying wire, circular loop, solenoid, toroid.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_biot_savart_app', title: 'Biot-Savart Law for Straight Wire & Circular Coil Center/Axis', status: 'AVAILABLE' },
+            { id: 'phy_sub_ampere_law', title: 'Ampere Law for Long Wire, Solenoid & Toroid', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_lorentz_force',
+          title: 'Lorentz Force, Cyclotron & Magnetic Dipole',
+          summary: 'Force on moving charge, force between parallel wires, torque on magnetic dipole.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_lorentz_force_charge', title: 'Magnetic Lorentz Force F = q(v x B) & Cyclotron Radius', status: 'AVAILABLE' },
+            { id: 'phy_sub_parallel_wires', title: 'Force Per Unit Length Between Parallel Current Wires', status: 'AVAILABLE' },
+            { id: 'phy_sub_magnetic_dipole', title: 'Torque on Current Loop & Terrestrial Magnetism Elements', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
@@ -137,30 +386,115 @@ export const physicsTree: SyllabusSubjectTree = {
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_faraday_lenz', title: 'Faraday Law, Lenz Law & Inductance', summary: 'Induced EMF, self and mutual inductance, motional EMF.' },
-        { id: 'phy_ac_circuits', title: 'AC Circuits, Resonance & Transformers', summary: 'RMS values, LCR series circuit resonance, power factor, transformer efficiency.' }
+        {
+          id: 'phy_faraday_lenz',
+          title: 'Faraday Law, Lenz Law & Inductance',
+          summary: 'Induced EMF, self and mutual inductance, motional EMF.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_faraday_induced_emf', title: 'Faraday Law & Lenz Law Direction Opposition', status: 'AVAILABLE' },
+            { id: 'phy_sub_motional_emf', title: 'Motional EMF & Self/Mutual Inductance Coefficient', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_ac_circuits',
+          title: 'AC Circuits, Resonance & Transformers',
+          summary: 'RMS values, LCR series circuit resonance, power factor, transformer efficiency.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_rms_ac', title: 'RMS Voltage & Current Values in AC Circuits', status: 'AVAILABLE' },
+            { id: 'phy_sub_lcr_resonance', title: 'Series LCR Resonance Frequency & Q-Factor', status: 'AVAILABLE' },
+            { id: 'phy_sub_transformer', title: 'Ideal Transformer Ratio & Power Losses', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'phy_ch14',
-      title: 'Optics (Ray & Wave)',
+      title: 'EM Waves & Optics (Ray & Wave)',
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_ray_optics', title: 'Reflection, Refraction, Lenses & Prisms', summary: 'Total internal reflection, lens maker formula, prism deviation, microscope, telescope.' },
-        { id: 'phy_wave_optics', title: 'Huygens Principle, Interference & Diffraction', summary: 'Young double slit experiment fringe width, single slit diffraction pattern, polarization.' }
+        {
+          id: 'phy_em_waves',
+          title: 'Electromagnetic Waves & Spectrum',
+          summary: 'Displacement current, EM wave properties, transverse nature, EM spectrum.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_em_spectrum', title: 'Electromagnetic Spectrum Frequency & Wavelength Bands', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_ray_optics',
+          title: 'Reflection, Refraction, Lenses & Prisms',
+          summary: 'Total internal reflection, lens maker formula, prism deviation, microscope, telescope.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_refraction_tir', title: 'Snell Law, Total Internal Reflection & Critical Angle', status: 'AVAILABLE' },
+            { id: 'phy_sub_lens_maker', title: 'Lens Maker Formula & Combination of Lenses in Contact', status: 'AVAILABLE' },
+            { id: 'phy_sub_prism_instruments', title: 'Prism Minimum Deviation & Compound Microscope / Telescope', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_wave_optics',
+          title: 'Huygens Principle, Interference & Diffraction',
+          summary: 'Young double slit experiment fringe width, single slit diffraction pattern, polarization.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_ydse', title: 'Young Double Slit Experiment Fringe Width β Formula', status: 'AVAILABLE' },
+            { id: 'phy_sub_diffraction_single_slit', title: 'Single Slit Diffraction Central Maxima Width', status: 'AVAILABLE' },
+            { id: 'phy_sub_polarization', title: 'Brewster Law & Malus Law in Polarization', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'phy_ch15',
-      title: 'Modern Physics',
+      title: 'Modern Physics & Semiconductors',
       classLevel: '12',
       category: 'General',
       topics: [
-        { id: 'phy_photoelectric', title: 'Photoelectric Effect & Matter Waves', summary: 'Einstein photoelectric equation, stopping potential, de Broglie wavelength.' },
-        { id: 'phy_bohr_atom', title: 'Bohr Model of Atom & Hydrogen Spectrum', summary: 'Bohr postulates, radius, energy levels, Rydberg constant, spectral series.' },
-        { id: 'phy_nuclei', title: 'Nuclear Physics & Radioactivity', summary: 'Mass defect, binding energy curve, fission and fusion.' },
-        { id: 'phy_semiconductors', title: 'Semiconductor Electronics & P-N Junction', summary: 'Intrinsic/extrinsic semiconductors, diode rectifiers, Zener diode, logic gates.' }
+        {
+          id: 'phy_photoelectric',
+          title: 'Photoelectric Effect & Matter Waves',
+          summary: 'Einstein photoelectric equation, stopping potential, de Broglie wavelength.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_photoelectric_eq', title: 'Einstein Photoelectric Work Function & Stopping Potential Graph', status: 'AVAILABLE' },
+            { id: 'phy_sub_de_broglie', title: 'de Broglie Wavelength of Electron λ = h / sqrt(2meV)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_bohr_atom',
+          title: 'Bohr Model of Atom & Hydrogen Spectrum',
+          summary: 'Bohr postulates, radius, energy levels, Rydberg constant, spectral series.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_bohr_radii_energy', title: 'Bohr Radius & Energy Level En = -13.6 Z^2 / n^2 eV', status: 'AVAILABLE' },
+            { id: 'phy_sub_hydrogen_series', title: 'Hydrogen Spectral Series (Lyman, Balmer, Paschen, Brackett, Pfund)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_nuclei',
+          title: 'Nuclear Physics & Radioactivity',
+          summary: 'Mass defect, binding energy curve, fission and fusion.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_binding_energy', title: 'Mass Defect Δm & Binding Energy Per Nucleon Curve', status: 'AVAILABLE' },
+            { id: 'phy_sub_nuclear_reactions', title: 'Nuclear Fission & Fusion Energy Yields', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'phy_semiconductors',
+          title: 'Semiconductor Electronics & P-N Junction',
+          summary: 'Intrinsic/extrinsic semiconductors, diode rectifiers, Zener diode, logic gates.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'phy_sub_pn_diode', title: 'P-N Junction Forward & Reverse Bias V-I Curve', status: 'AVAILABLE' },
+            { id: 'phy_sub_rectifiers_zener', title: 'Half-Wave & Full-Wave Diode Rectifiers & Zener Voltage Regulator', status: 'AVAILABLE' },
+            { id: 'phy_sub_logic_gates', title: 'AND, OR, NOT, NAND, NOR Logic Gates Truth Tables', status: 'AVAILABLE' }
+          ]
+        }
       ]
     }
   ]
@@ -469,7 +803,7 @@ export const physicsQuestions: GraduatedQuestionItem[] = [
       commonTrapWarning: 'Check units carefully; ensure moment of inertia is in kg m^2 and angular velocity in rad/s.'
     },
     topperTrick: 'Torque = Angular momentum change / time = (2 * 50) / 10 = 10 N m.',
-    commonTrap: 'Forgetting to divide by time or miscalculating angular acceleration.',
+    commonTrap: 'Arithmetic mistake when dividing angular momentum by time.',
     difficultyScore: 30,
     category: 'ACTUAL_PYQ',
     pyqYear: 'NEET 2024',
@@ -499,7 +833,7 @@ export const physicsTopicResources: TopicResourceData[] = [
       tier1DetailedNCERT: 'NCERT Kinematics line-by-line derivation: Instantaneous velocity is defined as the limit of average velocity as time interval approaches zero: v = lim(Δt->0) Δx/Δt = dx/dt. Acceleration is the time derivative of velocity: a = dv/dt = d^2x/dt^2. For motion under constant acceleration, integrating dv = a dt yields v = u + at. Integrating dx = (u + at) dt yields x = x0 + ut + 0.5 at^2.',
       tier2HighYieldShort: '• Velocity-time graph area = Displacement.\n• Speed-time graph area = Distance.\n• Slope of position-time graph = Velocity.\n• Slope of velocity-time graph = Acceleration.\n• Under gravity: Maximum height H = u^2 / (2g), Time to top = u/g.',
       tier3ConceptualVisualMechanisms: 'Kinematic Parameter Model: Envision a particle moving along x-axis. If v and a have same sign, particle speeds up. If v and a have opposite signs, particle slows down (retardation). When v = 0, particle momentarily comes to rest and changes direction if a ≠ 0.',
-      tier4TopperTricksShortcuts: 'SATHEE Shortcut: For a particle dropped from rest under gravity, distances covered in successive 1-second intervals are in ratio 1 : 3 : 5 : 7 : ... (Galileo Law of Odd Numbers).'
+      tier4TopperTricksShortcuts: 'Galileo Law Shortcut: For a particle dropped from rest under gravity, distances covered in successive 1-second intervals are in ratio 1 : 3 : 5 : 7 : ... (Galileo Law of Odd Numbers).'
     },
     formulaBank: [
       'v = u + a * t',

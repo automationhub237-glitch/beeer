@@ -8,106 +8,292 @@ import type {
 export const biologyTree: SyllabusSubjectTree = {
   subject: 'Biology',
   chapters: [
+    // Botany Chapters
     {
       id: 'bio_ch1',
       title: 'Diversity in Living World & Biological Classification',
       classLevel: '11',
       category: 'Botany',
       topics: [
-        { id: 'bio_taxonomy', title: 'Taxonomic Hierarchy & Five Kingdom Classification', summary: 'Binomial nomenclature, Whittaker 5 kingdoms, Monera, Protista, Fungi characteristics.' }
+        {
+          id: 'bio_taxonomy',
+          title: 'Taxonomic Hierarchy & Five Kingdom Classification',
+          summary: 'Binomial nomenclature, Whittaker 5 kingdoms, Monera, Protista, Fungi characteristics.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_taxonomic_ranks', title: 'Species, Genus, Family, Order, Class, Phylum/Division, Kingdom', status: 'AVAILABLE' },
+            { id: 'bio_sub_five_kingdoms', title: 'Monera, Protista, Fungi, Plantae & Animalia Diagnostic Criteria', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch2',
-      title: 'Plant Kingdom & Animal Kingdom',
+      title: 'Plant Kingdom & Plant Anatomy / Morphology',
       classLevel: '11',
       category: 'Botany',
       topics: [
-        { id: 'bio_plant_kingdom', title: 'Algae, Bryophytes, Pteridophytes, Gymnosperms & Angiosperms', summary: 'Alternation of generations, double fertilization in angiosperms, seed habit origin.' },
-        { id: 'bio_animal_phyla', title: 'Non-Chordates & Chordates Phyla Classification', summary: 'Coelom, symmetry, germ layers, key diagnostic features from Porifera to Mammalia.' }
+        {
+          id: 'bio_plant_kingdom',
+          title: 'Algae, Bryophytes, Pteridophytes, Gymnosperms & Angiosperms',
+          summary: 'Alternation of generations, double fertilization in angiosperms, seed habit origin.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_algae_classes', title: 'Chlorophyceae, Phaeophyceae & Rhodophyceae Pigments & Food Reserves', status: 'AVAILABLE' },
+            { id: 'bio_sub_bryo_ptero', title: 'Bryophytes (Liverworts/Mosses) & Pteridophytes Seed Habit Evolution', status: 'AVAILABLE' },
+            { id: 'bio_sub_gymno_angio', title: 'Gymnosperms Naked Seeds & Angiosperm Double Fertilization', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch3',
-      title: 'Cell: Structure & Functions & Biomolecules',
-      classLevel: '11',
-      category: 'Zoology',
-      topics: [
-        { id: 'bio_cell_organelles', title: 'Prokaryotic vs Eukaryotic Cell Organelles', summary: 'Endomembrane system, mitochondria, plastids, ribosome 70S vs 80S, cytoskeleton.' },
-        { id: 'bio_cell_cycle', title: 'Mitosis, Meiosis & Cell Cycle Phases', summary: 'G1, S, G2 phases, crossing over in Pachytene, homologous chromosome segregation.' },
-        { id: 'bio_biomolecules', title: 'Proteins, Carbohydrates, Lipids & Enzymes', summary: 'Peptide and glycosidic bonds, enzyme activation energy, competitive inhibition.' }
-      ]
-    },
-    {
-      id: 'bio_ch4',
       title: 'Plant Physiology',
       classLevel: '11',
       category: 'Botany',
       topics: [
-        { id: 'bio_photosynthesis', title: 'Photosynthesis: Light Reactions & Calvin Cycle (C3/C4)', summary: 'NCERT diagram labels: Z-scheme, RuBisCO dual activity, Kranz anatomy in C4 plants.' },
-        { id: 'bio_respiration_plant', title: 'Glycolysis, Krebs Cycle & Electron Transport System', summary: 'ATP yield, amphibolic pathway, respiratory quotient (RQ) values for substrates.' },
-        { id: 'bio_plant_growth', title: 'Plant Growth Regulators & Photoperiodism', summary: 'Auxins, Gibberellins, Cytokinins, ABA, Ethylene, Vernalization.' }
+        {
+          id: 'bio_photosynthesis',
+          title: 'Photosynthesis: Light Reactions & Calvin Cycle (C3/C4)',
+          summary: 'NCERT diagram labels: Z-scheme, RuBisCO dual activity, Kranz anatomy in C4 plants.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_z_scheme', title: 'Light Reactions, PS II, PS I & Z-Scheme Non-Cyclic Photophosphorylation', status: 'AVAILABLE' },
+            { id: 'bio_sub_calvin_cycle', title: 'Calvin Cycle (C3) Carboxylation, Reduction & Regeneration Steps', status: 'AVAILABLE' },
+            { id: 'bio_sub_c4_kranz', title: 'Hatch-Slack Pathway (C4) & Kranz Anatomy Spatial Isolation', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_respiration_plant',
+          title: 'Glycolysis, Krebs Cycle & Electron Transport System',
+          summary: 'ATP yield, amphibolic pathway, respiratory quotient (RQ) values for substrates.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_glycolysis', title: 'Glycolysis (EMP Pathway) Substrate Level Phosphorylation Steps', status: 'AVAILABLE' },
+            { id: 'bio_sub_krebs_ets', title: 'Krebs TCA Cycle & Complex I-IV ETS Oxidative Phosphorylation', status: 'AVAILABLE' },
+            { id: 'bio_sub_rq_values', title: 'Respiratory Quotient (RQ) for Carbohydrates, Fats & Proteins', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_plant_growth',
+          title: 'Plant Growth Regulators & Photoperiodism',
+          summary: 'Auxins, Gibberellins, Cytokinins, ABA, Ethylene, Vernalization.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_pgr_functions', title: 'Auxin Apical Dominance, Gibberellin Bolting & Ethylene Fruit Ripening', status: 'AVAILABLE' },
+            { id: 'bio_sub_photoperiodism', title: 'Short Day, Long Day Plants & Vernalization Cold Treatment', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
+      id: 'bio_ch4',
+      title: 'Reproduction in Plants & Ecology',
+      classLevel: '12',
+      category: 'Botany',
+      topics: [
+        {
+          id: 'bio_flower_repro',
+          title: 'Sexual Reproduction in Flowering Plants',
+          summary: 'Microsporogenesis, megasporogenesis, embryo sac development, apomixis.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_pollen_embryosac', title: '7-Celled 8-Nucleate Embryo Sac Development', status: 'AVAILABLE' },
+            { id: 'bio_sub_pollination_apomixis', title: 'Wind, Water & Insect Pollination Adaptations & Apomixis', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_population_ecology',
+          title: 'Organisms, Populations & Ecosystems',
+          summary: 'Exponential growth (dN/dt = rN), Logistic growth (dN/dt = rN((K-N)/K)), energy flow.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_growth_curves', title: 'Exponential vs Logistic Growth Curves & Age Pyramids', status: 'AVAILABLE' },
+            { id: 'bio_sub_ecological_pyramids', title: '10% Energy Flow Law & Pyramids of Number, Biomass & Energy', status: 'AVAILABLE' }
+          ]
+        }
+      ]
+    },
+
+    // Zoology Chapters
+    {
       id: 'bio_ch5',
-      title: 'Human Physiology',
+      title: 'Animal Kingdom & Tissue Organisation',
       classLevel: '11',
       category: 'Zoology',
       topics: [
-        { id: 'bio_digestion_breathing', title: 'Breathing, Respiration & Gas Transport', summary: 'Inspiration/expiration mechanism, oxygen dissociation curve, Haldane & Bohr effects.' },
-        { id: 'bio_circulation_excretion', title: 'Circulatory System, Cardiac Cycle & Excretion', summary: 'ECG waves, counter-current mechanism in Henle loop, renin-angiotensin system (RAAS).' },
-        { id: 'bio_neural_endocrine', title: 'Neural Control & Endocrine Regulation', summary: 'Action potential generation, impulse conduction across synapse, hormone feedback mechanisms.' }
+        {
+          id: 'bio_animal_phyla',
+          title: 'Non-Chordates & Chordates Phyla Classification',
+          summary: 'Coelom, symmetry, germ layers, key diagnostic features from Porifera to Mammalia.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_non_chordates', title: 'Porifera, Cnidaria, Platyhelminthes, Annelida, Arthropoda, Mollusca Features', status: 'AVAILABLE' },
+            { id: 'bio_sub_chordates_classes', title: 'Chondrichthyes, Osteichthyes, Amphibia, Reptilia, Aves & Mammalia', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch6',
-      title: 'Reproduction in Organisms & Humans',
-      classLevel: '12',
+      title: 'Cell Biology, Biomolecules & Cell Cycle',
+      classLevel: '11',
       category: 'Zoology',
       topics: [
-        { id: 'bio_flower_repro', title: 'Sexual Reproduction in Flowering Plants', summary: 'Microsporogenesis, megasporogenesis, embryo sac development, apomixis.' },
-        { id: 'bio_human_repro', title: 'Gametogenesis, Menstrual Cycle & Embryonic Development', summary: 'Spermatogenesis vs Oogenesis, LH surge, implantation, placenta hormones.' }
+        {
+          id: 'bio_cell_organelles',
+          title: 'Prokaryotic vs Eukaryotic Cell Organelles',
+          summary: 'Endomembrane system, mitochondria, plastids, ribosome 70S vs 80S, cytoskeleton.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_organelles_struct', title: 'Endomembrane System, Golgi, Lysosomes & Vacuoles', status: 'AVAILABLE' },
+            { id: 'bio_sub_ribosomes_70s_80s', title: '70S vs 80S Ribosomes & Mitochondria Semi-Autonomy', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_cell_cycle',
+          title: 'Mitosis, Meiosis & Cell Cycle Phases',
+          summary: 'G1, S, G2 phases, crossing over in Pachytene, homologous chromosome segregation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_cell_cycle_stages', title: 'Interphase G1, S (DNA Replication), G2 & M Phase', status: 'AVAILABLE' },
+            { id: 'bio_sub_meiosis_prophase1', title: 'Meiosis I Prophase Sub-stages (Leptotene to Diakinesis)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_biomolecules',
+          title: 'Proteins, Carbohydrates, Lipids & Enzymes',
+          summary: 'Peptide and glycosidic bonds, enzyme activation energy, competitive inhibition.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_protein_struct', title: 'Primary, Secondary, Tertiary & Quaternary Protein Structures', status: 'AVAILABLE' },
+            { id: 'bio_sub_enzyme_inhibition', title: 'Enzyme Action Vmax, Km & Competitive Inhibition', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch7',
-      title: 'Genetics & Molecular Basis of Inheritance',
-      classLevel: '12',
+      title: 'Human Physiology',
+      classLevel: '11',
       category: 'Zoology',
       topics: [
-        { id: 'bio_mendelian', title: 'Mendelian Genetics & Inheritance Patterns', summary: 'Monohybrid (3:1), Dihybrid (9:3:3:1), incomplete dominance, codominance, pedigree analysis.' },
-        { id: 'bio_molecular_inheritance', title: 'DNA Structure, Replication, Transcription & Operon', summary: 'Hershey-Chase experiment, semi-conservative replication, Lac Operon regulation.' }
+        {
+          id: 'bio_digestion_breathing',
+          title: 'Breathing, Respiration & Gas Transport',
+          summary: 'Inspiration/expiration mechanism, oxygen dissociation curve, Haldane & Bohr effects.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_breathing_mechanics', title: 'Inspiration/Expiration Diaphragm & Intercostal Muscle Action', status: 'AVAILABLE' },
+            { id: 'bio_sub_oxygen_dissociation', title: 'Oxyhemoglobin Dissociation Sigmoid Curve & Bohr Effect Shifts', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_circulation_excretion',
+          title: 'Circulatory System, Cardiac Cycle & Excretion',
+          summary: 'ECG waves, counter-current mechanism in Henle loop, renin-angiotensin system (RAAS).',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_cardiac_cycle_ecg', title: 'Cardiac Cycle Phases, Heart Sounds & ECG P-QRS-T Waves', status: 'AVAILABLE' },
+            { id: 'bio_sub_counter_current_raas', title: 'Nephron Counter-Current Concentrating Mechanism & RAAS Regulation', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_neural_endocrine',
+          title: 'Neural Control & Endocrine Regulation',
+          summary: 'Action potential generation, impulse conduction across synapse, hormone feedback mechanisms.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_action_potential', title: 'Neuron Resting Potential Na+/K+ Pump & Action Potential Depolarization', status: 'AVAILABLE' },
+            { id: 'bio_sub_endocrine_hormones', title: 'Pituitary, Thyroid, Adrenal & Pancreas Hormone Mechanisms', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch8',
-      title: 'Evolution & Human Health',
+      title: 'Human Reproduction & Reproductive Health',
       classLevel: '12',
       category: 'Zoology',
       topics: [
-        { id: 'bio_evolution', title: 'Darwinism, Homology/Analogy & Hardy-Weinberg', summary: 'Adaptive radiation, homologous vs analogous organs, p^2 + 2pq + q^2 = 1.' },
-        { id: 'bio_human_health', title: 'Immunity, Common Pathogens & Cancer/AIDS', summary: 'Active vs passive immunity, humoral vs cell-mediated immunity, life cycle of Plasmodium.' }
+        {
+          id: 'bio_human_repro',
+          title: 'Gametogenesis, Menstrual Cycle & Embryonic Development',
+          summary: 'Spermatogenesis vs Oogenesis, LH surge, implantation, placenta hormones.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_sperm_oogenesis', title: 'Spermatogenesis vs Oogenesis Meiotic Timing Differences', status: 'AVAILABLE' },
+            { id: 'bio_sub_menstrual_cycle', title: 'Follicular, Ovulatory (LH Surge) & Luteal Menstrual Phases', status: 'AVAILABLE' }
+          ]
+        }
       ]
     },
     {
       id: 'bio_ch9',
-      title: 'Biotechnology: Principles & Applications',
+      title: 'Genetics, Evolution & Human Health',
       classLevel: '12',
-      category: 'Botany',
+      category: 'Zoology',
       topics: [
-        { id: 'bio_biotech_principles', title: 'Restriction Enzymes, Recombinant DNA & PCR', summary: 'EcoRI recognition site GAATTC, agarose gel electrophoresis, PCR denaturation/annealing/extension.' },
-        { id: 'bio_biotech_apps', title: 'Bt Cotton, RNA Interference & Gene Therapy', summary: 'Cry proteins, meloidogyne incognita silencing via RNAi, ADA deficiency treatment.' }
-      ]
-    },
-    {
-      id: 'bio_ch10',
-      title: 'Ecology & Environment',
-      classLevel: '12',
-      category: 'Botany',
-      topics: [
-        { id: 'bio_population_ecology', title: 'Organisms & Population Growth Curves', summary: 'Exponential growth (dN/dt = rN), Logistic growth (dN/dt = rN((K-N)/K)), age pyramids.' },
-        { id: 'bio_ecosystem_biodiversity', title: 'Ecosystem Pyramids & Biodiversity Conservation', summary: 'Energy flow 10% law, ecological pyramids, in-situ vs ex-situ conservation.' }
+        {
+          id: 'bio_mendelian',
+          title: 'Mendelian Genetics & Inheritance Patterns',
+          summary: 'Monohybrid (3:1), Dihybrid (9:3:3:1), incomplete dominance, codominance, pedigree analysis.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_monohybrid_dihybrid', title: 'Mendelian Ratios 3:1, 9:3:3:1 & Test Cross Definition', status: 'AVAILABLE' },
+            { id: 'bio_sub_pedigree_analysis', title: 'Autosomal Dominant/Recessive & Sex-Linked Pedigree Symbols', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_molecular_inheritance',
+          title: 'DNA Structure, Replication, Transcription & Operon',
+          summary: 'Hershey-Chase experiment, semi-conservative replication, Lac Operon regulation.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_hershey_chase', title: 'Hershey-Chase Radioactive 35S / 32P DNA Proof', status: 'AVAILABLE' },
+            { id: 'bio_sub_lac_operon_details', title: 'Lac Operon Regulatory Gene i, Operator & z, y, a Enzymes', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_evolution',
+          title: 'Darwinism, Homology/Analogy & Hardy-Weinberg',
+          summary: 'Adaptive radiation, homologous vs analogous organs, p^2 + 2pq + q^2 = 1.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_homology_analogy', title: 'Divergent (Homologous) vs Convergent (Analogous) Evolution', status: 'AVAILABLE' },
+            { id: 'bio_sub_hardy_weinberg', title: 'Hardy-Weinberg Equilibrium Equation p^2 + 2pq + q^2 = 1', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_human_health',
+          title: 'Immunity, Common Pathogens & Cancer/AIDS',
+          summary: 'Active vs passive immunity, humoral vs cell-mediated immunity, life cycle of Plasmodium.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_immunity_types', title: 'Innate, Acquired, Active, Passive & B/T Cell Immunity', status: 'AVAILABLE' },
+            { id: 'bio_sub_plasmodium_cycle', title: 'Plasmodium Life Cycle Human Hepatocyte & Mosquito Gut Stages', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_biotech_principles',
+          title: 'Restriction Enzymes, Recombinant DNA & PCR',
+          summary: 'EcoRI recognition site GAATTC, agarose gel electrophoresis, PCR denaturation/annealing/extension.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_restriction_ecori', title: 'Restriction Endonucleases EcoRI Sticky Ends GAATTC', status: 'AVAILABLE' },
+            { id: 'bio_sub_pcr_steps', title: 'PCR Thermal Cycles Denaturation (94°C), Annealing (54°C), Extension (72°C)', status: 'AVAILABLE' }
+          ]
+        },
+        {
+          id: 'bio_biotech_apps',
+          title: 'Bt Cotton, RNA Interference & Gene Therapy',
+          summary: 'Cry proteins, meloidogyne incognita silencing via RNAi, ADA deficiency treatment.',
+          status: 'AVAILABLE',
+          subtopics: [
+            { id: 'bio_sub_bt_cotton_cry', title: 'Bacillus thuringiensis Cry1Ac & Cry2Ab Protein Mechanism', status: 'AVAILABLE' },
+            { id: 'bio_sub_rnai_silencing', title: 'RNA Interference (RNAi) dsRNA Silencing Mechanism in Nematodes', status: 'AVAILABLE' }
+          ]
+        }
       ]
     }
   ]
@@ -117,7 +303,7 @@ export const biologySprintBlocks: SprintBlockItem[] = [
   {
     id: 'sprint_bio_1',
     subject: 'Biology',
-    chapter: 'Cell: Structure & Functions & Biomolecules',
+    chapter: 'Cell Biology, Biomolecules & Cell Cycle',
     topic: 'Mitosis, Meiosis & Cell Cycle Phases',
     title: 'NCERT Biology: Cell Cycle & Meiosis Key Stages',
     blockType: 'Biology',
@@ -167,7 +353,7 @@ export const biologySprintBlocks: SprintBlockItem[] = [
   {
     id: 'sprint_bio_3',
     subject: 'Biology',
-    chapter: 'Genetics & Molecular Basis of Inheritance',
+    chapter: 'Genetics, Evolution & Human Health',
     topic: 'DNA Structure, Replication, Transcription & Operon',
     title: 'NCERT Genetics: Lac Operon Regulation Scheme',
     blockType: 'Biology',
@@ -212,7 +398,7 @@ export const biologyQuestions: GraduatedQuestionItem[] = [
     category: 'EASY',
     ncertPageRef: 'NCERT Class 11 Biology, Page 135',
     subject: 'Biology',
-    chapter: 'Cell: Structure & Functions & Biomolecules',
+    chapter: 'Cell Biology, Biomolecules & Cell Cycle',
     topic: 'Prokaryotic vs Eukaryotic Cell Organelles',
     difficulty: '0-20',
     questionType: 'MCQ',
@@ -240,7 +426,7 @@ export const biologyQuestions: GraduatedQuestionItem[] = [
     category: 'MEDIUM',
     ncertPageRef: 'NCERT Class 11 Biology, Page 168',
     subject: 'Biology',
-    chapter: 'Cell: Structure & Functions & Biomolecules',
+    chapter: 'Cell Biology, Biomolecules & Cell Cycle',
     topic: 'Mitosis, Meiosis & Cell Cycle Phases',
     difficulty: '20-50',
     questionType: 'MCQ',
@@ -306,7 +492,7 @@ export const biologyQuestions: GraduatedQuestionItem[] = [
     category: 'PREDICTED_PYQ',
     ncertPageRef: 'NCERT Class 12 Biology, Page 116',
     subject: 'Biology',
-    chapter: 'Genetics & Molecular Basis of Inheritance',
+    chapter: 'Genetics, Evolution & Human Health',
     topic: 'DNA Structure, Replication, Transcription & Operon',
     difficulty: '20-50',
     questionType: 'MCQ',
@@ -340,7 +526,7 @@ export const biologyQuestions: GraduatedQuestionItem[] = [
     pyqYear: 'NEET 2023',
     ncertPageRef: 'NCERT Class 12 Biology, Page 198',
     subject: 'Biology',
-    chapter: 'Biotechnology: Principles & Applications',
+    chapter: 'Genetics, Evolution & Human Health',
     topic: 'Restriction Enzymes, Recombinant DNA & PCR',
     difficulty: '0-20',
     questionType: 'MCQ',

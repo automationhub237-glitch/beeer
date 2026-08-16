@@ -145,10 +145,27 @@ export interface SprintBlockItem {
   };
 }
 
+export type ResourceStatus =
+  | 'AVAILABLE'
+  | 'LINK ONLY'
+  | 'LOGIN REQUIRED'
+  | 'PAYWALLED'
+  | 'UNAVAILABLE'
+  | 'NEEDS VERIFICATION';
+
+export interface SyllabusSubtopicNode {
+  id: string;
+  title: string;
+  summary?: string;
+  status?: ResourceStatus;
+}
+
 export interface SyllabusTopicNode {
   id: string;
   title: string;
   summary?: string;
+  subtopics?: SyllabusSubtopicNode[];
+  status?: ResourceStatus;
 }
 
 export interface SyllabusChapterNode {
